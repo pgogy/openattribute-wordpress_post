@@ -2,7 +2,7 @@
 /*
 Plugin Name: Open Attribute
 Plugin URI: http://openattribute.com
-add licensing info to a Wordpress blog or post
+OpenAttribute allows you to add licensing information to your Wordpress site and individual blogs. It places information into posts and RSS feeds as well as other user friendly features.
 Version: 0.01
 Author: Open Attribute team
 Author URI: http://openattribute.com
@@ -509,7 +509,7 @@ function openattribute_add_license_content($output){
 			
 				$display = true;
 			
-				if(get_option('openattribute_append_blogoverride')==1){
+				if(get_option('openattribute_blogoverride')==1){
 				
 					$author = explode("oaauthor",$content);
 					$title = explode("oatitle",$content);
@@ -537,36 +537,40 @@ function openattribute_add_license_content($output){
 					
 				if($display){
 				
-					//update_option('openattribute_buttonset', 1);
-					$author = get_option('openattribute_site_author');		
-					$site_license = get_option('openattribute_site_license');
-					$site_attribution_url = get_option('openattribute_site_attribution_url');
-					$licenses = get_option('openattribute_licenses');
-					
-					$data_licenses = explode("\n",$licenses);
-					while($license = array_pop($data_licenses)){
-					
-						$pair = explode(",",$license);
+					if($_GET['feed']==""){	
+				
+						//update_option('openattribute_buttonset', 1);
+						$author = get_option('openattribute_site_author');		
+						$site_license = get_option('openattribute_site_license');
+						$site_attribution_url = get_option('openattribute_site_attribution_url');
+						$licenses = get_option('openattribute_licenses');
 						
-						if(trim($pair[1])==trim($site_license)){
+						$data_licenses = explode("\n",$licenses);
+						while($license = array_pop($data_licenses)){
 						
-							$site_license_url = $pair[0];
+							$pair = explode(",",$license);
+							
+							if(trim($pair[1])==trim($site_license)){
+							
+								$site_license_url = $pair[0];
+							
+							}
 						
 						}
-					
-					}
-					
-					if(get_option('openattribute_buttonset')==1){
-		    		
-		    			$output .= '<div onclick="attribute_button(event)" style="float:left; position:relative; display:inline; cursor:pointer;cursor:hand"><img src="wp-content/plugins/openattribute_posts/attrib_button.png" /></DIV>';
-		    		
-		    		}
+						
+						if(get_option('openattribute_buttonset')==1){
+			    		
+			    			$output .= '<div onclick="attribute_button(event)" style="float:left; position:relative; display:inline; cursor:pointer;cursor:hand"><img src="wp-content/plugins/openattribute_posts/attrib_button.png" /></DIV>';
+			    		
+			    		}		    		
 			
-					$license_data = '<div class="license"><span xmlns:dct="http://purl.org/dc/terms/" property="dct:title">' . the_title( '', '', 0 ) . '</span>';
-		      		$license_data .= ' by <a xmlns:cc="http://creativecommons.org/ns#" href="' . $site_attribution_url . '" property="cc:attributionName" rel="cc:attributionURL" >' . $author . '</a>';
-		      		$license_data .= ' is licensed under a <a rel="license" href="' . $site_license_url . '">' . $site_license . '</a></div>';
+						$license_data = '<div class="license"><span xmlns:dct="http://purl.org/dc/terms/" property="dct:title">' . the_title( '', '', 0 ) . '</span>';
+		      			$license_data .= ' by <a xmlns:cc="http://creativecommons.org/ns#" href="' . $site_attribution_url . '" property="cc:attributionName" rel="cc:attributionURL" >' . $author . '</a>';
+		      			$license_data .= ' is licensed under a <a rel="license" href="' . $site_license_url . '">' . $site_license . '</a></div>';
 		    		
-		    		$output .= $license_data;
+		    			$output .= $license_data;
+		    			
+		    		}
 		
 				}
 			
@@ -703,21 +707,25 @@ function openattribute_add_license_header(){
 						
 						}
 						
-						echo '<script type="text/javascript"> function attribute_button(event){ ';
-						echo ' document.getElementById("openattribute_license_holder").style.position = "absolute";';
-						echo ' document.getElementById("openattribute_license_holder").style.top = (document.documentElement.scrollTop+(event.clientY/2)) + "px";';
-						echo ' document.getElementById("openattribute_license_holder").style.left = ((document.documentElement.clientWidth/2)-350) + "px";';			    			
-						echo ' document.getElementById("openattribute_license_holder").style.zIndex = 2;';
-						echo ' document.getElementById("openattribute_license_holder").style.display = "block";';
-		    			echo ' }</script>';
-				
-						$license_data = '<div id="openattribute_license_holder" style="float:left; background-color:#fff; border:2px solid #ccc; width:850px; padding:20px; display:none;"><div style="float:left; position:relative; background-color:#fff;"><h3>OpenAttribute</h3><p style="margin:0px; padding:0px">HTML Text<br><textarea rows="5" cols="100" style="margin:0px; padding:0px;"><span xmlns:dct="http://purl.org/dc/terms/" property="dct:title">' . the_title( '', '', 0 ) . '</span>';
-			      		$license_data .= ' by <a xmlns:cc="http://creativecommons.org/ns#" href="' . $site_attribution_url . '" property="cc:attributionName" rel="cc:attributionURL" >' . $author . '</a>';
-			      		$license_data .= ' is licensed under a <a rel="license" href="' . $site_license_url . '">' . $site_license . '</a></textarea></p>';
-			      		
-			      		$license_data .= '<p style="margin:0px; padding:0px">Plain text<br /><textarea rows="5" cols="100" style="float:left; position:relative; clear:left; left:0px;">' . the_title( '', '', 0 ) . ' by ' . $author . ' @ ' . $site_attribution_url . ' is licensed under a <a rel="license" href="' . $site_license_url . '">' . $site_license . '</a></textarea></p><p style="text-decoration:underline;cursor:hand;cursor:pointer; margin:0px; padding:0px;" onclick="this.parentNode.parentNode.style.display=\'none\';">Close</p></div></div>';
+						if($_GET['feed']==""){
+						
+							echo '<script type="text/javascript"> function attribute_button(event){ ';
+							echo ' document.getElementById("openattribute_license_holder").style.position = "absolute";';
+							echo ' document.getElementById("openattribute_license_holder").style.top = (document.documentElement.scrollTop+(event.clientY/2)) + "px";';
+							echo ' document.getElementById("openattribute_license_holder").style.left = ((document.documentElement.clientWidth/2)-350) + "px";';			    			
+							echo ' document.getElementById("openattribute_license_holder").style.zIndex = 2;';
+							echo ' document.getElementById("openattribute_license_holder").style.display = "block";';
+			    			echo ' }</script>';
+					
+							$license_data = '<div id="openattribute_license_holder" style="float:left; background-color:#fff; border:2px solid #ccc; width:850px; padding:20px; display:none;"><div style="float:left; position:relative; background-color:#fff;"><h3>OpenAttribute</h3><p style="margin:0px; padding:0px">HTML Text<br><textarea rows="5" cols="100" style="margin:0px; padding:0px;"><span xmlns:dct="http://purl.org/dc/terms/" property="dct:title">' . the_title( '', '', 0 ) . '</span>';
+				      		$license_data .= ' by <a xmlns:cc="http://creativecommons.org/ns#" href="' . $site_attribution_url . '" property="cc:attributionName" rel="cc:attributionURL" >' . $author . '</a>';
+				      		$license_data .= ' is licensed under a <a rel="license" href="' . $site_license_url . '">' . $site_license . '</a></textarea></p>';
+				      		
+				      		$license_data .= '<p style="margin:0px; padding:0px">Plain text<br /><textarea rows="5" cols="100" style="float:left; position:relative; clear:left; left:0px;">' . the_title( '', '', 0 ) . ' by ' . $author . ' @ ' . $site_attribution_url . ' is licensed under a <a rel="license" href="' . $site_license_url . '">' . $site_license . '</a></textarea></p><p style="text-decoration:underline;cursor:hand;cursor:pointer; margin:0px; padding:0px;" onclick="this.parentNode.parentNode.style.display=\'none\';">Close</p></div></div>';
+				    		
+				    		echo $license_data;
 			    		
-			    		echo $license_data;
+			    		}
 		    		
 		    		}
 		
@@ -731,14 +739,180 @@ function openattribute_add_license_header(){
 
 }
 
+function openattribute_rdf_ns(){
+
+	if(get_option('openattribute_site_license')!=""){
+
+		echo 'xmlns:cc="http://creativecommons.org/ns#" ';
+	
+	}
+
+}
+
+function openattribute_rdf_head(){
+
+     if(get_option('openattribute_site_license')!=""){
+     
+     	echo '<cc:license rdf:resource="' . get_option('openattribute_site_license') . '" />';
+     	
+     }
+} 
+
+function openattribute_rss2_head(){
+
+     if(get_option('openattribute_site_license')!=""){
+     
+     	echo '<creativeCommons:license>' . get_option('openattribute_site_license') . '</creativeCommons:license>';
+     	echo '<dc:rights>' . get_option('openattribute_site_license') . '</dc:rights>';
+     	
+     }
+
+}
+
+function openattribute_atom_head() {
+
+     if(get_option('openattribute_site_license')!=""){
+     
+     	echo '<link rel="license" type="text/html" href="' . get_option('openattribute_site_license') . '" />';
+     	
+     }
+
+}
+
+function openattribute_augment_feed($content) {
+	
+		if(get_option('openattribute_site_license')!=""){
+		
+			if(get_option('openattribute_blogoverride')==0){
+			
+				echo '<creativeCommons:license>' . get_option('openattribute_site_license') . '</creativeCommons:license>';
+     			echo '<dc:rights>' . get_option('openattribute_site_license') . '</dc:rights>';
+     	
+     		}else{
+
+				$display = true;
+				
+				$content = $wp_query->post->post_content;
+			
+				if(get_option('openattribute_blogoverride')==1){
+				
+					$author = explode("oaauthor",$content);
+					$title = explode("oatitle",$content);
+					$oashorthand = explode("oashorthand",$content);	
+					
+					if(count($author)!=1){
+					
+						$display = false;
+					
+					}
+					
+					if(count($title)!=1){
+					
+						$display = false;
+					
+					}
+					
+					if(count($oashorthand)!=1){
+					
+						$display = false;
+					
+					}
+					
+					if($display){
+					
+						$data=explode("oalicenseurl=\"",$content);
+						
+						if(count($data)!=1){
+						
+							$license = explode("\"",$data[0]);
+							
+							echo '<creativeCommons:license>' . $license[0] . '</creativeCommons:license>';
+     						echo '<dc:rights>' . $license[0] . '</dc:rights>';
+						
+						}
+					
+					}
+					
+				}  		
+     		
+     		}     		
+    		
+		}else{
+		
+			$content = $wp_query->post->post_content;
+			$display = true;
+				
+			$author = explode("oaauthor",$content);
+			$title = explode("oatitle",$content);
+			$oashorthand = explode("oashorthand",$content);	
+					
+			if(count($author)!=1){
+					
+				$display = false;
+					
+			}
+					
+			if(count($title)!=1){
+					
+				$display = false;
+					
+			}
+					
+			if(count($oashorthand)!=1){
+					
+				$display = false;
+					
+			}
+					
+			if($display){
+					
+				$data=explode("oalicenseurl=\"",$content);
+						
+				if(count($data)!=1){
+						
+					$license = explode("\"",$data[0]);
+							
+					echo '<creativeCommons:license>' . $license[0] . '</creativeCommons:license>';
+     				echo '<dc:rights>' . $license[0] . '</dc:rights>';
+						
+				}
+					
+			}
+		
+		}
+	
+	}
+
+// Modifications to feeds
+;
+add_action('rss2_head', 'openattribute_rss2_head');
+add_action('atom_head', 'openattribute_atom_head');
+add_action('rdf_ns', 'openattribute_rdf_ns');
+add_action('rdf_header', 'openattribute_rdf_head');
+add_action("atom_entry","openattribute_augment_feed");
+add_action("rdf_item","openattribute_augment_feed");
+add_action("rss2_item","openattribute_augment_feed");
+add_action("rss_item","openattribute_augment_feed");
+
+// Admin options on wp-admin side of things
+
 add_action('admin_init', 'openattribute_register' );
 add_action('admin_menu', 'openattribute_menu_option');
 add_action('admin_head', 'openattribute_postform');
+add_action('admin_notices', 'openattribute_firstrun');
+
+// Code for the insert into blog function for non-site licenses.
+
 add_filter('media_buttons_context', 'openattribute_button');
 add_filter('media_upload_openattribute', 'add_openattribute_action');
-add_action('admin_notices', 'openattribute_firstrun');
+
+// Code to handle blog specific licensing
+
 add_action("add_meta_boxes", "openattribute_add_disable_menu" );
 add_action('save_post', 'openattribute_save_post');
+
+// Code to display site licenses
+
 add_action("the_content", 'openattribute_add_license_content');
 add_action('wp_footer', 'openattribute_add_license_footer');
 add_action('loop_start', 'openattribute_add_license_header');
