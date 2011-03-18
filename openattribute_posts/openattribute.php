@@ -65,7 +65,7 @@ function add_openattribute_action() {
     </script>
     <link rel='stylesheet' id='colors-css'  href='<?PHP echo WP_PLUGIN_URL . '/openattribute_posts/'; ?>openattribute.css' type='text/css' media='all' />
 	<div id="openattribute">		
-		<h1>OpenAttribute</h1>
+		<img src="<?PHP echo WP_PLUGIN_URL . '/openattribute_posts/'; ?>openAttrLogo.jpg" />
     	<h3>Adding licensing to your blog post</h3>
     	<p>Choose the author for this blog 
     <?php 
@@ -84,24 +84,32 @@ function add_openattribute_action() {
 		
 		wp_dropdown_users( $args ); ?></p><p>Next click to insert the author<input type="button" class="button" onclick="insert_author()" value="Insert" /></p>
 		<script type="text/javascript">
-		
+				
 			var win = window.dialogArguments || opener || parent || top;
-		
+			
 			data_to_parse = win.document.getElementById('content').innerHTML;
 		
 			author_data = data_to_parse.split('oaauthor="');
-		
-			author = author_data[1].split('"');
-		
-			author=author[0];
 			
-			if(author!=""){
+			if(author_data.length!=1){
+		
+				author = author_data[1].split('"');
 			
-				document.write('<p>If you wish to change the details you can do so now <input id="author_oa" type="text" value="' + author + '" size="105" /></p>');
+				alert("author stuff");
+		
+				author=author[0];
+			
+				alert("here i am");
+			
+				if(author!=""){
+			
+					document.write('<p>If you wish to change the details you can do so now <input id="author_oa" type="text" value="' + author + '" size="90" /></p>');
+				
+				}
 				
 			}else{
 			
-				document.write('<p>If you wish to change the details you can do so now <input id="author_oa" type="text" value="" size="105" /></p>');
+				document.write('<p>If you wish to change the details you can do so now <input id="author_oa" type="text" value="" size="90" /></p>');
 			
 			}			
 			
@@ -113,20 +121,32 @@ function add_openattribute_action() {
 			data_to_parse = win.document.getElementById('content').innerHTML;
 		
 			title_data = data_to_parse.split('oatitle="');
-		
-			title = title_data[1].split('"');
-		
-			title=title[0];
 			
-			if(title!=""){
+			if(title_data.length!=1){
+		
+				title = title_data[1].split('"');
 			
-				document.write('<p>If you wish to give the work a title you can do so<input id="title_oa" type="text" value="' + title + '" size="105" /></p>');
+				if(title.length!=1){
+		
+					title=title[0];
+			
+					if(title!=""){
+			
+						document.write('<p>If you wish to give the work a title you can do so<input id="title_oa" type="text" value="' + title + '" size="90" /></p>');
+				
+					}
+				
+				}else{
+			
+					document.write('<p>If you wish to give the work a title you can do so<input id="title_oa" type="text" value="" size="90" /></p>');
+			
+				}
 				
 			}else{
 			
-				document.write('<p>If you wish to give the work a title you can do so<input id="title_oa" type="text" value="" size="105" /></p>');
+				document.write('<p>If you wish to give the work a title you can do so<input id="title_oa" type="text" value="" size="90" /></p>');
 			
-			}			
+			}				
 			
 		</script>
 		<script type="text/javascript">
@@ -137,17 +157,27 @@ function add_openattribute_action() {
 		
 			attribution_url_data = data_to_parse.split('oaattributionurl="');
 		
-			attribution_url = attribution_url_data[1].split('"');
+			if(attribution_url_data.length!=1){
 		
-			attribution_url=attribution_url[0];
+				attribution_url = attribution_url_data[1].split('"');
 			
-			if(attribution_url!=""){
+				if(attribution_url.length!=1){
+		
+					attribution_url=attribution_url[0];
 			
-				document.write('<p>You can set a URL for yourself as an author (Wordpress address set by default)<input id="url_oa" type="text" value="' + attribution_url + '" size="105" /></p>');
+				if(attribution_url!=""){
+			
+					document.write('<p>You can set a URL for yourself as an author (Wordpress address set by default)<input id="url_oa" type="text" value="' + attribution_url + '" size="90" /></p>');
+				
+				}else{
+			
+					document.write('<p>You can set a URL for yourself as an author (Wordpress address set by default)<input id="url_oa" type="text" value="" size="90" /></p>');
+			
+				}
 				
 			}else{
 			
-				document.write('<p>You can set a URL for yourself as an author (Wordpress address set by default)<input id="url_oa" type="text" value="" size="105" /></p>');
+				document.write('<p>You can set a URL for yourself as an author (Wordpress address set by default)<input id="url_oa" type="text" value="" size="90" /></p>');
 			
 			}			
 			
@@ -176,14 +206,22 @@ function add_openattribute_action() {
 		
 		oashorthand_data = data_to_parse.split('oashorthand="');
 		
-		oashorthand = oashorthand_data[1].split('"');
+		if(oashorthand_data.length!=1){
 		
-		oashorthand=oashorthand[0];
+			oashorthand = oashorthand_data[1].split('"');
 		
-		if(oashorthand!=""){
+			if(oashorthand.length!=1){
+		
+				oashorthand=oashorthand[0];
+		
+				if(oashorthand!=""){
 			
-			document.write('<p>The current license is set as ' + oashorthand + '</p>');
+					document.write('<p>The current license is set as ' + oashorthand + '</p>');
 				
+				}
+				
+			}
+			
 		}
 			
 		</script>
@@ -717,7 +755,7 @@ function openattribute_add_license_header(){
 							echo ' document.getElementById("openattribute_license_holder").style.display = "block";';
 			    			echo ' }</script>';
 					
-							$license_data = '<div id="openattribute_license_holder" style="float:left; background-color:#fff; border:2px solid #ccc; width:850px; padding:20px; display:none;"><div style="float:left; position:relative; background-color:#fff;"><h3>OpenAttribute</h3><p style="margin:0px; padding:0px">HTML Text<br><textarea rows="5" cols="100" style="margin:0px; padding:0px;"><span xmlns:dct="http://purl.org/dc/terms/" property="dct:title">' . the_title( '', '', 0 ) . '</span>';
+							$license_data = '<div id="openattribute_license_holder" style="float:left; border:3px solid #1F3350; width:850px; padding:20px; display:none;"><div style="float:left; position:relative;"><img src="wp-content/plugins/openattribute_posts/openAttrLogo.jpg" /><p style="margin:0px; padding:0px">HTML Text<br><textarea rows="5" cols="100" style="margin:0px; padding:0px;"><span xmlns:dct="http://purl.org/dc/terms/" property="dct:title">' . the_title( '', '', 0 ) . '</span>';
 				      		$license_data .= ' by <a xmlns:cc="http://creativecommons.org/ns#" href="' . $site_attribution_url . '" property="cc:attributionName" rel="cc:attributionURL" >' . $author . '</a>';
 				      		$license_data .= ' is licensed under a <a rel="license" href="' . $site_license_url . '">' . $site_license . '</a></textarea></p>';
 				      		
@@ -762,8 +800,24 @@ function openattribute_rss2_head(){
 
      if(get_option('openattribute_site_license')!=""){
      
-     	echo '<creativeCommons:license>' . get_option('openattribute_site_license') . '</creativeCommons:license>';
-     	echo '<dc:rights>' . get_option('openattribute_site_license') . '</dc:rights>';
+     	echo '<cc:license ';
+     	
+     	if($_GET['feed']=="rss"){
+     	
+     		echo ' xmlns:cc="http://creativecommons.org/ns#" ';
+     	
+     	}
+     	
+     	echo '>' . get_option('openattribute_site_license') . '</cc:license>';
+     	echo '<dc:rights ';
+     	
+     	if($_GET['feed']=="rss"){
+     	
+     		echo ' xmlns:dc="http://purl.org/dc/elements/1.1/" ';
+     		
+     	}
+     	
+     	echo ' >' . get_option('openattribute_site_license') . '</dc:rights>';
      	
      }
 
@@ -785,7 +839,7 @@ function openattribute_augment_feed($content) {
 		
 			if(get_option('openattribute_blogoverride')==0){
 			
-				echo '<creativeCommons:license>' . get_option('openattribute_site_license') . '</creativeCommons:license>';
+				echo '<cc:license>' . get_option('openattribute_site_license') . '</cc:license>';
      			echo '<dc:rights>' . get_option('openattribute_site_license') . '</dc:rights>';
      	
      		}else{
@@ -882,11 +936,19 @@ function openattribute_augment_feed($content) {
 		}
 	
 	}
+	
+	function openattribute_stylesheet(){
+	
+		echo '<link rel="stylesheet" href="http://winstonjingo.co.uk/wp-content/plugins/openattribute_posts/openattribute.css" type="text/css" media="screen,projection" /> ';	
+	
+	}
 
 // Modifications to feeds
 ;
+add_action('rss_head', 'openattribute_rss2_head');
 add_action('rss2_head', 'openattribute_rss2_head');
 add_action('atom_head', 'openattribute_atom_head');
+add_action('rss2_ns', 'openattribute_rdf_ns');
 add_action('rdf_ns', 'openattribute_rdf_ns');
 add_action('rdf_header', 'openattribute_rdf_head');
 add_action("atom_entry","openattribute_augment_feed");
@@ -916,4 +978,9 @@ add_action('save_post', 'openattribute_save_post');
 add_action("the_content", 'openattribute_add_license_content');
 add_action('wp_footer', 'openattribute_add_license_footer');
 add_action('loop_start', 'openattribute_add_license_header');
+
+// Load pop up for style sheet
+
+add_action('wp_head', 'openattribute_stylesheet');
+
 ?>
