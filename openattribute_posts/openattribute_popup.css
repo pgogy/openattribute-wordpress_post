@@ -1,0 +1,30 @@
+div#openattribute{
+background-image:url ("../wp-content/plugins/openattribute_posts/openAttrLogo.jpg");
+background-position: top left;
+height:75px;
+font-family: Arial,Verdana, Helvetica;
+color:#fff;
+}
+
+div#openattribute_license_holder{
+	
+	background-color:#6299d4;
+	
+}
+
+div#openattribute_license_holder div, div#openattribute_license_holder h3, div#openattribute_license_holder p{
+	
+	background-color:#6299d4;
+	color:#1F3350;
+	font-size:120%;
+	
+}
+
+.button{
+-moz-border-radius: 4px 4px 4px 4px;
+    background-color: #1F3350;
+    border: 1px solid #FFFFFF;
+    color: #FFFFFF;
+    margin-left: 8px;
+    padding: 2px;
+}

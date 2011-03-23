@@ -20,7 +20,7 @@ function openattribute_firstrun(){
 	    
 	    echo "<p>If you'd like to get started straight away - either go to <a href=\"options-general.php?page=openattribute\">OpenAttribute settings page</a> or start a new blog post and look for the symbol below.</p>";
 	    
-	    echo "<p><img src=\"../wp-content/plugins/openattribute_posts/information.png\" /></p>";
+	    echo "<p><img src=\"" . WP_PLUGIN_URL . "/" . str_replace(basename( __FILE__),"",plugin_basename(__FILE__)) . "information.png\" /></p>";
 	    
 	    echo "<p>You can turn this screen off on the <a href=\"options-general.php?page=openattribute\">OpenAttribute settings page</a></p>";
 	    
@@ -63,7 +63,7 @@ function add_openattribute_action() {
     			}
     
     </script>
-    <link rel='stylesheet' id='colors-css'  href='<?PHP echo WP_PLUGIN_URL . '/openattribute_posts/'; ?>openattribute.css' type='text/css' media='all' />
+    <link rel='stylesheet' id='colors-css'  href='<?PHP echo WP_PLUGIN_URL . '/openattribute_posts/'; ?>openattribute_iframe.css' type='text/css' media='all' />
 	<div id="openattribute">		
 		<img src="<?PHP echo WP_PLUGIN_URL . '/openattribute_posts/'; ?>openAttrLogo.jpg" />
     	<h3>Adding licensing to your blog post</h3>
@@ -598,7 +598,7 @@ function openattribute_add_license_content($output){
 						
 						if(get_option('openattribute_buttonset')==1){
 			    		
-			    			$output .= '<div onclick="attribute_button(event)" style="float:left; position:relative; display:inline; cursor:pointer;cursor:hand"><img src="wp-content/plugins/openattribute_posts/attrib_button.png" /></DIV>';
+			    			$output .= '<div onclick="attribute_button(event)" style="float:left; position:relative; display:inline; cursor:pointer;cursor:hand"><img src="' . WP_PLUGIN_URL . '/' . str_replace(basename( __FILE__),"",plugin_basename(__FILE__)) . 'attrib_button.png" /></DIV>';
 			    		
 			    		}		    		
 			
@@ -687,7 +687,7 @@ function openattribute_add_license_footer(){
 					
 					if(get_option('openattribute_buttonset')==1){
 		    		
-		    			echo '<div onclick="attribute_button(event)" style="float:left; position:relative; display:inline; cursor:pointer;cursor:hand"><img src="wp-content/plugins/openattribute_posts/attrib_button.png" /></DIV>';
+		    			echo '<div onclick="attribute_button(event)" style="float:left; position:relative; display:inline; cursor:pointer;cursor:hand"><img src="' . WP_PLUGIN_URL . '/' . str_replace(basename( __FILE__),"",plugin_basename(__FILE__)) . 'attrib_button.png" /></DIV>';
 		    		
 		    		}
 			
@@ -755,7 +755,7 @@ function openattribute_add_license_header(){
 							echo ' document.getElementById("openattribute_license_holder").style.display = "block";';
 			    			echo ' }</script>';
 					
-							$license_data = '<div id="openattribute_license_holder" style="float:left; border:3px solid #1F3350; width:850px; padding:20px; display:none;"><div style="float:left; position:relative;"><img src="wp-content/plugins/openattribute_posts/openAttrLogo.jpg" /><p style="margin:0px; padding:0px">HTML Text<br><textarea rows="5" cols="100" style="margin:0px; padding:0px;"><span xmlns:dct="http://purl.org/dc/terms/" property="dct:title">' . the_title( '', '', 0 ) . '</span>';
+							$license_data = '<div id="openattribute_license_holder" style="float:left; border:3px solid #1F3350; width:850px; padding:20px; display:none;"><div style="float:left; position:relative;"><img src="' . WP_PLUGIN_URL . '/' . str_replace(basename( __FILE__),"",plugin_basename(__FILE__)) . 'openAttrLogo.jpg" /><p style="margin:0px; padding:0px">HTML Text<br><textarea rows="5" cols="100" style="margin:0px; padding:0px;"><span xmlns:dct="http://purl.org/dc/terms/" property="dct:title">' . the_title( '', '', 0 ) . '</span>';
 				      		$license_data .= ' by <a xmlns:cc="http://creativecommons.org/ns#" href="' . $site_attribution_url . '" property="cc:attributionName" rel="cc:attributionURL" >' . $author . '</a>';
 				      		$license_data .= ' is licensed under a <a rel="license" href="' . $site_license_url . '">' . $site_license . '</a></textarea></p>';
 				      		
@@ -939,7 +939,7 @@ function openattribute_augment_feed($content) {
 	
 	function openattribute_stylesheet(){
 	
-		echo '<link rel="stylesheet" href="http://winstonjingo.co.uk/wp-content/plugins/openattribute_posts/openattribute.css" type="text/css" media="screen,projection" /> ';	
+		echo '<link rel="stylesheet" href="' . WP_PLUGIN_URL . '/' . str_replace(basename( __FILE__),"",plugin_basename(__FILE__)) . 'openattribute_popup.css" type="text/css" media="screen,projection" /> ';	
 	
 	}
 
