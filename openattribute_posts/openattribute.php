@@ -44,15 +44,17 @@ function add_openattribute_action() {
       	      		attribution_url = document.getElementById("url_oa").value;
       	      		author = document.getElementById("author_oa").value;
       	      		           			
-      				string = '<span oatitle="' + title + '" xmlns:dct="http://purl.org/dc/terms/" property="dct:title">' + title + '</span>'
-      				string += ' by <a oaattributionurl="' + attribution_url + '" xmlns:cc="http://creativecommons.org/ns#" href="' + attribution_url + '" property="cc:attributionName" rel="cc:attributionURL" oaauthor="' + author + '">' + author + '</a>';
-      				string += ' is licensed under a <a oashorthand="' + license_shorthand + '" oalicenseurl="' + license_url + '" rel="license" href="' + license_url + '">' + license_shorthand + '</a>.<br />';
+      				string = ' <a id="oatitle" href="<? echo $_GET['post']; ?>" xmlns:dc="http://purl.org/dc/terms/" property="dc:title">' + title + '</a>'
+      				string += ' by <a id="oaattributionurl" xmlns:cc="http://creativecommons.org/ns#" href="' + attribution_url + '" property="cc:attributionName" rel="cc:attributionURL" oaauthor="' + author + '">' + author + '</a>';
+      				string += ' is licensed under a <a id="oalicense" rel="license" href="' + license_url + '">' + license_shorthand + '</a>.<br />';
       				string += ' Based on a work at <a xmlns:dct="http://purl.org/dc/terms/" href="<? echo $_GET['post']; ?>" rel="dct:source"><?php echo $_GET['post']; ?></a>.';
+      				      	    				
+      				alert(string);      				
       				      				
       				var win = window.dialogArguments || opener || parent || top;
       				win.send_to_editor(string);
       				      				
-      				return false;
+      				return true;
     			}
     			
     			function insert_author(){
@@ -87,19 +89,17 @@ function add_openattribute_action() {
 				
 			var win = window.dialogArguments || opener || parent || top;
 			
-			data_to_parse = win.document.getElementById('content').innerHTML;
+			author = win.document.getElementById('content').innerHTML;
 		
-			author_data = data_to_parse.split('oaauthor="');
+			author_data = author.split('oaattributionurl');
 			
 			if(author_data.length!=1){
 		
-				author = author_data[1].split('"');
-			
-				alert("author stuff");
+				author = author_data[1].split('&gt;');
 		
+				author = author[1].split('&lt;');
+				
 				author=author[0];
-			
-				alert("here i am");
 			
 				if(author!=""){
 			
@@ -120,11 +120,13 @@ function add_openattribute_action() {
 		
 			data_to_parse = win.document.getElementById('content').innerHTML;
 		
-			title_data = data_to_parse.split('oatitle="');
+			title_data = data_to_parse.split('oatitle');
 			
 			if(title_data.length!=1){
 		
-				title = title_data[1].split('"');
+				title = title_data[1].split('&gt;');
+				
+				title = title[1].split('&lt;');
 			
 				if(title.length!=1){
 		
@@ -155,15 +157,19 @@ function add_openattribute_action() {
 		
 			data_to_parse = win.document.getElementById('content').innerHTML;
 		
-			attribution_url_data = data_to_parse.split('oaattributionurl="');
+			attribution_url_data = data_to_parse.split('oaattributionurl');
 		
 			if(attribution_url_data.length!=1){
-		
-				attribution_url = attribution_url_data[1].split('"');
+			
+				attribution_url = attribution_url_data[1].split('href="');
+				
+				attribution_url = attribution_url[1].split('"');
 			
 				if(attribution_url.length!=1){
 		
 					attribution_url=attribution_url[0];
+					
+				}
 			
 				if(attribution_url!=""){
 			
@@ -171,13 +177,13 @@ function add_openattribute_action() {
 				
 				}else{
 			
-					document.write('<p>You can set a URL for yourself as an author (Wordpress address set by default)<input id="url_oa" type="text" value="" size="90" /></p>');
+					document.write('<p>You can set a URL for yourself as an author (Wordpress address set by default)<input id="url_oa" type="text" value="<?PHP echo site_url(); ?>" size="90" /></p>');
 			
 				}
 				
 			}else{
 			
-				document.write('<p>You can set a URL for yourself as an author (Wordpress address set by default)<input id="url_oa" type="text" value="" size="90" /></p>');
+				document.write('<p>You can set a URL for yourself as an author (Wordpress address set by default)<input id="url_oa" type="text" value="<?PHP echo site_url(); ?>" size="90" /></p>');
 			
 			}			
 			
@@ -204,11 +210,13 @@ function add_openattribute_action() {
 		
 		data_to_parse = win.document.getElementById('content').innerHTML;		
 		
-		oashorthand_data = data_to_parse.split('oashorthand="');
+		oashorthand_data = data_to_parse.split('oalicense');
 		
 		if(oashorthand_data.length!=1){
 		
-			oashorthand = oashorthand_data[1].split('"');
+			oashorthand = oashorthand_data[1].split('&gt;');
+			
+			oashorthand = oashorthand[1].split('&lt;');
 		
 			if(oashorthand.length!=1){
 		
@@ -269,7 +277,7 @@ function openattribute_options_page() {
    		$first_run = get_option('openattribute_firstrun')=='1'?"checked":"";
     	$rss_feed = get_option('openattribute_rss')=='1'?"checked":"";
     	$blog_override = get_option('openattribute_blogoverride')=='1'?"checked":"";
-    	$buttonset = get_option('openattribute_blogoverride')=='1'?"checked":"";
+    	$buttonset = get_option('openattribute_buttonset')=='1'?"checked":"";
     	$disable = get_option('openattribute_disable')=='1'?"checked":"";
     	$append_content = get_option('openattribute_append_content')=='1'?"checked":"";
 		$append_footer = get_option('openattribute_append_footer')=='1'?"checked":"";
@@ -282,7 +290,7 @@ function openattribute_options_page() {
     <input type="checkbox" name="openattribute_buttonset" <?PHP echo $buttonset; ?> /> If this box is ticked, an Open Attribute "Attribute Me" button will appear on all attributed resources <br />
     <input type="checkbox" name="openattribute_disable" <?PHP echo $disable; ?> /> If this box is ticked, a blog author can opt out of having their work attributed<br />
     <input type="checkbox" name="openattribute_append_content" <?PHP echo $append_content; ?> /> If this box is ticked, the attribution will appear after the blog's content<br />
-    <input type="checkbox" name="openattribute_append_footer" <?PHP echo $append_footer; ?> /> If this box is ticked, the attribution will appear in the blog's footer<br />
+    <input type="checkbox" name="openattribute_append_footer" <?PHP echo $append_footer; ?> /> If this box is ticked, the attribution will appear in the blog's footer (both this, and the option aboive, can be ticked)<br />
     <h3><a name="licenses">Add Licenses</a></h3>
     <p>Please enter the licenses you wish to use below. The format for the license is "<b>URL</b><b>,</b><b>text to display on screen</b>". If you wish to use a custom license, perhaps create a page on your blog to hold your licensing info. By default you have been provided with some <a href="http://www.creativecommons.org" target="_blank">Creative Commons licenses</a>.</p>
     <textarea rows="5" cols="100" name="openattribute_licenses" ><?php 
@@ -316,8 +324,20 @@ function openattribute_options_page() {
 						
 						$data = explode(",",$license_pair);
 			
-						?><option license_value="<?PHP echo $data[0]; ?>"><?PHP echo $data[1]; ?></option><?PHP
-			
+						?><option license_value="<?PHP 
+						
+							echo $data[0];
+						
+							echo "\" ";
+							
+							if(trim(get_option('openattribute_site_license'))==trim($data[1])){
+							
+								echo " selected ";
+							
+							}
+							
+							echo ">" . $data[1] . "</option>";							
+									
 					}
 			?>						
 	</select><p>The current license is - <?PHP
@@ -531,17 +551,13 @@ function openattribute_add_disable_menu($output){
 
 function openattribute_add_license_content($output){
 
-	if(isset($_GET)){
+	global $wp_query;
+
+	if(is_single()){
 
 		if(get_option('openattribute_append_content')==1){
 	
-			$disable = get_post_meta($_GET['p'], 'disable_license');
-			
-			if($disable[0]==""){
-			
-				$disable = get_post_meta($_GET['page_id'], 'disable_license');
-			
-			}
+			$disable = get_post_meta($wp_query->posts[0]->ID, 'disable_license');
 			
 			if($disable[0]=="off"||$disable[0]==""){
 			
@@ -549,9 +565,9 @@ function openattribute_add_license_content($output){
 			
 				if(get_option('openattribute_blogoverride')==1){
 				
-					$author = explode("oaauthor",$content);
-					$title = explode("oatitle",$content);
-					$oashorthand = explode("oashorthand",$content);	
+					$author = explode("oaauthor",$output);
+					$title = explode("oatitle",$output);
+					$oashorthand = explode("oalicense",$output);	
 					
 					if(count($author)!=1){
 					
@@ -575,9 +591,8 @@ function openattribute_add_license_content($output){
 					
 				if($display){
 				
-					if($_GET['feed']==""){	
+					if(is_single()){	
 				
-						//update_option('openattribute_buttonset', 1);
 						$author = get_option('openattribute_site_author');		
 						$site_license = get_option('openattribute_site_license');
 						$site_attribution_url = get_option('openattribute_site_attribution_url');
@@ -598,7 +613,7 @@ function openattribute_add_license_content($output){
 						
 						if(get_option('openattribute_buttonset')==1){
 			    		
-			    			$output .= '<div onclick="attribute_button(event)" style="float:left; position:relative; display:inline; cursor:pointer;cursor:hand"><img src="' . WP_PLUGIN_URL . '/' . str_replace(basename( __FILE__),"",plugin_basename(__FILE__)) . 'attrib_button.png" /></DIV>';
+			    			$output .= '<div onclick="attribute_button(event)" style="float:left; position:relative; display:inline; cursor:pointer;cursor:hand"><img src="' . WP_PLUGIN_URL . '/' . '/openattribute_posts/' . 'attrib_button.png" /></DIV>';
 			    		
 			    		}		    		
 			
@@ -624,21 +639,21 @@ function openattribute_add_license_content($output){
 
 function openattribute_add_license_footer(){
 
-	if(count($_GET)!=0){
+	global $wp_query;
+	
+	if(is_single()){
 
 		if(get_option('openattribute_append_footer')==1){
 	
-			if($disable[0]==""){
-			
-				$disable = get_post_meta($_GET['page_id'], 'disable_license');
-			
-			}
+			$disable = get_post_meta($wp_query->posts[0]->ID, 'disable_license');
 			
 			if($disable[0]=="off"||$disable[0]==""){
 			
 				$display = true;
 			
-				if(get_option('openattribute_append_blogoverride')==1){
+				if(get_option('openattribute_blogoverride')==1){
+				
+					$content = $wp_query->posts[0]->post_content;
 				
 					$author = explode("oaauthor",$content);
 					$title = explode("oatitle",$content);
@@ -685,17 +700,21 @@ function openattribute_add_license_footer(){
 					
 					}
 					
-					if(get_option('openattribute_buttonset')==1){
-		    		
-		    			echo '<div onclick="attribute_button(event)" style="float:left; position:relative; display:inline; cursor:pointer;cursor:hand"><img src="' . WP_PLUGIN_URL . '/' . str_replace(basename( __FILE__),"",plugin_basename(__FILE__)) . 'attrib_button.png" /></DIV>';
+					if(is_single()){
+					
+						if(get_option('openattribute_buttonset')==1){
+			    		
+			    			echo '<div onclick="attribute_button(event)" style="float:left; position:relative; display:inline; cursor:pointer;cursor:hand"><img src="' . WP_PLUGIN_URL . '/' . '/openattribute_posts/' . 'attrib_button.png" /></DIV>';
+			    		
+			    		}
+				
+						$license_data = '<div class="license"><span xmlns:dct="http://purl.org/dc/terms/" property="dct:title">' . the_title( '', '', 0 ) . '</span>';
+			      		$license_data .= ' by <a xmlns:cc="http://creativecommons.org/ns#" href="' . $site_attribution_url . '" property="cc:attributionName" rel="cc:attributionURL" >' . $author . '</a>';
+			      		$license_data .= ' is licensed under a <a rel="license" href="' . $site_license_url . '">' . $site_license . '</a></div>';
+			    		
+			    		echo $license_data;
 		    		
 		    		}
-			
-					$license_data = '<div class="license"><span xmlns:dct="http://purl.org/dc/terms/" property="dct:title">' . the_title( '', '', 0 ) . '</span>';
-		      		$license_data .= ' by <a xmlns:cc="http://creativecommons.org/ns#" href="' . $site_attribution_url . '" property="cc:attributionName" rel="cc:attributionURL" >' . $author . '</a>';
-		      		$license_data .= ' is licensed under a <a rel="license" href="' . $site_license_url . '">' . $site_license . '</a></div>';
-		    		
-		    		echo $license_data;
 		
 				}
 			
@@ -709,7 +728,7 @@ function openattribute_add_license_footer(){
 
 function openattribute_add_license_header(){
 
-	if(count($_GET)!=0){
+	if(is_single()){
 
 		if(get_option('openattribute_append_footer')==1){
 	
@@ -745,7 +764,7 @@ function openattribute_add_license_header(){
 						
 						}
 						
-						if($_GET['feed']==""){
+						if(is_single()){
 						
 							echo '<script type="text/javascript"> function attribute_button(event){ ';
 							echo ' document.getElementById("openattribute_license_holder").style.position = "absolute";';
@@ -939,7 +958,7 @@ function openattribute_augment_feed($content) {
 	
 	function openattribute_stylesheet(){
 	
-		echo '<link rel="stylesheet" href="' . WP_PLUGIN_URL . '/' . str_replace(basename( __FILE__),"",plugin_basename(__FILE__)) . 'openattribute_popup.css" type="text/css" media="screen,projection" /> ';	
+		echo '<link rel="stylesheet" href="' . WP_PLUGIN_URL . '/openattribute_posts/' . 'openattribute_popup.css" type="text/css" media="screen,projection" /> ';	
 	
 	}
 
