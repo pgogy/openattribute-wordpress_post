@@ -737,7 +737,7 @@ function openattribute_add_license_content($output){
 	
 	}
 	
-	return $output;
+	return get_option('openattribute_pre_license_html') . $output . get_option('openattribute_post_license_html');
 
 }
 
@@ -820,6 +820,8 @@ function openattribute_add_license_footer(){
 		    			$license_data .= get_option('openattribute_post_license_html');
 		    		
 		    			$output .= $license_data;
+		    			
+		    			echo get_option('openattribute_pre_license_html') . $output . get_option('openattribute_post_license_html');
 		    		
 		    		}
 		
