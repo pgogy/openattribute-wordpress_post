@@ -61,7 +61,7 @@ class OpenAttributeWidget extends WP_Widget {
 												
 							if(is_single()){
 					    		
-					    		echo "<a onclick=\"attribute_button(event)\" style=\"cursor:hand; cursor:pointer\">Attribute this resource</a>";
+					    		echo "<a onclick=\"attribute_button(event)\" style=\"cursor:hand; cursor:pointer\"><img src=\"" . WP_PLUGIN_URL . "/" . str_replace(basename( __FILE__),'',plugin_basename(__FILE__)) . "attrib_button.png\" />Attribute this resource</a>";
 					    	
 					    	}
 					    	

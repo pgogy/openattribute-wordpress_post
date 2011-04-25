@@ -3,7 +3,7 @@
 Plugin Name: Open Attribute
 Plugin URI: http://openattribute.com
 OpenAttribute allows you to add licensing information to your Wordpress site and individual blogs. It places information into posts and RSS feeds as well as other user friendly features.
-Version: 0.9
+Version: 0.91
 Author: Open Attribute team
 Author URI: http://openattribute.com
 */
@@ -16,7 +16,7 @@ function openattribute_firstrun(){
 	    	
 	    echo "<p style=\"text-decoration:underline; font-weight:bold\">Information on OpenAttribute</p>";
 	    	
-	    echo "<p>Thanks for installing OpenAttribute. You can find out about how to use our <a href=\"\" target=\"_blank\">wordpress plugin</a> on our <a href=\"\">OpenAttribute</a> site, where we also have browser plugins.</p>";
+	    echo "<p>Thanks for installing OpenAttribute. You can find out about how to use our <a href=\"http://http://openattribute.com/first-run-wordpress/\" target=\"_blank\">wordpress plugin</a> on our <a href=\"http://openattribute.com\">OpenAttribute</a> site, where we also have browser plugins.</p>";
 	    
 	    echo "<p>If you'd like to get started straight away - either go to <a href=\"options-general.php?page=openattribute\">OpenAttribute settings page</a> or start a new blog post and look for the symbol below.</p>";
 	    
@@ -700,7 +700,8 @@ function openattribute_add_license_content($output){
 						$licenses = get_option('openattribute_licenses');
 						
 						$data_licenses = explode("\n",$licenses);
-						while($license = array_pop($data_licenses)){
+						
+						while($license = array_shift($data_licenses)){
 						
 							$pair = explode(",",$license);
 							
@@ -720,7 +721,7 @@ function openattribute_add_license_content($output){
 			
 						$license_data .= get_option('openattribute_pre_license_html');
 			
-						$license_data .= '<span xmlns:dct="http://purl.org/dc/terms/" property="dct:title">' . the_title( '', '', 0 ) . '</span>';
+						$license_data .= '<span xmlns:dct="http://purl.org/dc/terms/" property="dct:title"><a href="' . $post->guid . '">' . the_title( '', '', 0 ) . '</a> / <a href="' . home_url() . '">' . get_bloginfo( "name" ) . '</a></span>';
 		      			$license_data .= ' by <a xmlns:cc="http://creativecommons.org/ns#" href="' . $site_attribution_url . '" property="cc:attributionName" rel="cc:attributionURL" >' . $author . '</a>';
 		      			$license_data .= ' is licensed under a <a rel="license" href="' . $site_license_url . '">' . $site_license . '</a>';
 		    			$license_data .= get_option('openattribute_post_license_html');
@@ -741,9 +742,9 @@ function openattribute_add_license_content($output){
 
 }
 
-function openattribute_add_license_footer(){
+function openattribute_add_license_footer($content){
 
-	global $wp_query;
+	global $wp_query,$post;
 	
 	if(is_single()){
 
@@ -792,7 +793,8 @@ function openattribute_add_license_footer(){
 					$licenses = get_option('openattribute_licenses');
 					
 					$data_licenses = explode("\n",$licenses);
-					while($license = array_pop($data_licenses)){
+					
+					while($license = array_shift($data_licenses)){
 					
 						$pair = explode(",",$license);
 						
@@ -808,20 +810,20 @@ function openattribute_add_license_footer(){
 					
 						if(get_option('openattribute_buttonset')==1){
 			    		
-			    			$output = '<div onclick="attribute_button(event)" style="float:left; position:relative; display:inline; cursor:pointer;cursor:hand"><img src="' . WP_PLUGIN_URL . '/' . '/openattribute_posts/' . 'attrib_button.png" /></DIV>';
+			    			$output = '<div onclick="attribute_button(event)" style="display:inline; cursor:pointer;cursor:hand"><img src="' . WP_PLUGIN_URL . '/' . '/openattribute_posts/' . 'attrib_button.png" /></DIV>';
 			    		
 			    		}
-				
+			    		
 						$license_data .= get_option('openattribute_pre_license_html');
 			
-						$license_data .= '<span xmlns:dct="http://purl.org/dc/terms/" property="dct:title">' . the_title( '', '', 0 ) . '</span>';
+						$license_data .= '<span xmlns:dct="http://purl.org/dc/terms/" property="dct:title"><a href="' . $post->guid . '">' . the_title( '', '', 0 ) . '</a> / <a href="' . home_url() . '">' . get_bloginfo( "name" ) . '</a></span>';
 		      			$license_data .= ' by <a xmlns:cc="http://creativecommons.org/ns#" href="' . $site_attribution_url . '" property="cc:attributionName" rel="cc:attributionURL" >' . $author . '</a>';
 		      			$license_data .= ' is licensed under a <a rel="license" href="' . $site_license_url . '">' . $site_license . '</a>';
 		    			$license_data .= get_option('openattribute_post_license_html');
 		    		
 		    			$output .= $license_data;
 		    			
-		    			echo get_option('openattribute_pre_license_html') . $output . get_option('openattribute_post_license_html');
+		    			echo $output;
 		    		
 		    		}
 		
@@ -836,6 +838,8 @@ function openattribute_add_license_footer(){
 }
 
 function openattribute_add_license_header(){
+
+	global $post;
 
 	if(is_single()){
 
@@ -857,10 +861,11 @@ function openattribute_add_license_header(){
 					
 						$author = get_option('openattribute_site_author');		
 						$site_license = get_option('openattribute_site_license');
-						$site_attribution_url = get_option('openattribute_site_attribution_url');
+						//$site_attribution_url = get_option('openattribute_site_attribution_url');
 						$licenses = get_option('openattribute_licenses');
 						
 						$data_licenses = explode("\n",$licenses);
+						
 						while($license = array_pop($data_licenses)){
 						
 							$pair = explode(",",$license);
@@ -881,9 +886,9 @@ function openattribute_add_license_header(){
 							echo ' document.getElementById("openattribute_license_holder").style.left = ((document.documentElement.clientWidth/2)-350) + "px";';			    			
 							echo ' document.getElementById("openattribute_license_holder").style.zIndex = 2;';
 							echo ' document.getElementById("openattribute_license_holder").style.display = "block";';
-			    			echo ' }</script>';
+			    			echo ' }</script>';							    		
 					
-							$license_data = '<div id="openattribute_license_holder" style="float:left; border:3px solid #1F3350; width:850px; padding:20px; display:none;"><div style="float:left; position:relative;"><img src="' . WP_PLUGIN_URL . '/' . str_replace(basename( __FILE__),"",plugin_basename(__FILE__)) . 'openAttrLogo.jpg" /><p style="margin:0px; padding:0px">HTML Text<br><textarea rows="5" cols="100" style="margin:0px; padding:0px;"><span xmlns:dct="http://purl.org/dc/terms/" property="dct:title">' . the_title( '', '', 0 ) . '</span>';
+							$license_data = '<div id="openattribute_license_holder" style="float:left; border:3px solid #1F3350; width:850px; padding:20px; display:none;"><div style="float:left; position:relative;"><img src="' . WP_PLUGIN_URL . '/' . str_replace(basename( __FILE__),"",plugin_basename(__FILE__)) . 'openAttrLogo.jpg" /><p style="margin:0px; padding:0px">HTML Text<br><textarea rows="5" cols="100" style="margin:0px; padding:0px;"><span xmlns:dct="http://purl.org/dc/terms/" property="dct:title"><a href="' . $post->guid . '">' . the_title( '', '', 0 ) . '</a> / <a href="' . home_url() . '">' . get_bloginfo( "name" ) . '</a></span>';
 				      		$license_data .= ' by <a xmlns:cc="http://creativecommons.org/ns#" href="' . $site_attribution_url . '" property="cc:attributionName" rel="cc:attributionURL" >' . $author . '</a>';
 				      		$license_data .= ' is licensed under a <a rel="license" href="' . $site_license_url . '">' . $site_license . '</a></textarea></p>';
 				      		
@@ -1110,7 +1115,7 @@ add_action('save_post', 'openattribute_save_post');
 // Code to display site licenses
 
 add_action("the_content", 'openattribute_add_license_content');
-add_action('wp_footer', 'openattribute_add_license_footer');
+add_action('get_footer', 'openattribute_add_license_footer');
 add_action('loop_start', 'openattribute_add_license_header');
 
 // Load pop up for style sheet
