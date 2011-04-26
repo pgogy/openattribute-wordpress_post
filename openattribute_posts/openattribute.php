@@ -37,24 +37,158 @@ function add_openattribute_action() {
 	<script language="Javascript" type="text/javascript">
 	
 				function insert() {
+				
+					var win = window.dialogArguments || opener || parent || top;
+			
+					var data = win.document.getElementById('content_ifr');
+							
+					if(data==null){
+					
+						data = win.document.getElementById('content').value;
+						
+					}else{
+					
+						data = data.contentWindow.document.body.innerHTML;
+					
+					}
+					
+					current_author="";
+					current_title="";
+					current_oashorthand="";
+					current_attribution_url="";				
+					
+					author_data = data.split('oaattributionurl');
+			
+					if(author_data.length!=1){
+				
+						author = author_data[1];
+						
+						author = author.split('>');
+				
+						author = author[1];
+						
+						author = author.split('<');
+						
+						current_author=author[0];
+						
+					}
+					
+					title_data = data.split('oatitle');
+					
+					if(title_data.length!=1){
+		
+						title = title_data[1];
+						
+						title = title.split('>');
+						
+						title = title[1].split('<');
+					
+						if(title.length!=1){
+				
+							current_title=title[0];							
+							
+						}
+						
+					}
+		
+					attribution_url_data = data.split('oaattributionurl');
+				
+					if(attribution_url_data.length!=1){
+					
+						attribution_url = attribution_url_data[1];
+						
+						attribution_url = attribution_url.split('href="');
+						
+						attribution_url = attribution_url[1];
+						
+						attribution_url = attribution_url.split('"');
+					
+						if(attribution_url.length!=1){
+				
+							current_attribution_url=attribution_url[0];
+							
+						}
+						
+					}		
+		
+					oashorthand_data = data.split('oalicense');
+					
+					if(oashorthand_data.length!=1){
+					
+						oashorthand = oashorthand_data[1];
+						
+						oashorthand = oashorthand.split('>');
+						
+						oashorthand = oashorthand[1];
+						
+						oashorthand = oashorthand.split('<');
+					
+						if(oashorthand.length!=1){
+					
+							current_oashorthand=oashorthand[0];
+						
+						}
+						
+					}
+					
+					oalicenseurl_data = data.split('rel="license" href="');
+					
+					if(oalicenseurl_data.length!=1){
+					
+						oalicenseurl = oalicenseurl_data[1];
+						
+						oalicenseurl = oalicenseurl.split('"');						
+					
+						if(oalicenseurl.length!=1){
+					
+							current_oalicenseurl=oalicenseurl[0];
+						
+						}
+						
+					}
 					
 					license_url = document.getElementById('license_oa').options[document.getElementById('license_oa').selectedIndex].getAttribute("license_value");
 					license_shorthand = document.getElementById('license_oa').options[document.getElementById('license_oa').selectedIndex].text;
       	      		title = document.getElementById("title_oa").value;
       	      		attribution_url = document.getElementById("url_oa").value;
       	      		author = document.getElementById("author_oa").value;
+      	      		
+      	      		if((current_oashorthand!="")||(current_attribution_url!="")||(current_title!="")||(current_author!="")){
+      	      		
+      	      			var data_drop = win.document.getElementById('content_ifr');
+							
+						if(data_drop==null){
+						
+							win.document.getElementById('content').value = "";
+							
+						}else{
+						
+							data_drop.contentWindow.document.body.innerHTML = "";
+						
+						}
+      	      			
+      	      			string = data;
+      	      			
+      	      			string = string.split('>' + current_title + '</a>').join(' xmlns:dc="http://purl.org/dc/terms/" property="dc:title">' + title + '</a>');  
+      	      			 
+      	      			string = string.split('xmlns:cc="http://creativecommons.org/ns#" href="' + current_attribution_url).join('xmlns:cc="http://creativecommons.org/ns#" href="' + attribution_url);
+      	      			string = string.split(' oaauthor="' + current_author + '">' + current_author + '</a>').join(' oaauthor="' + author + '">' + author + '</a>');   	      			
+      	      			string = string.split('rel="license" href="' + current_oalicenseurl + '">').join('rel="license" href="' + license_url + '">');
+      	      			string = string.split(current_oashorthand + '</a>').join(license_shorthand + '</a>');
+      	      			
+      	      		}else{
       	      		           			
-      				string = ' <a id="oatitle" href="<? echo $_GET['post']; ?>" xmlns:dc="http://purl.org/dc/terms/" property="dc:title">' + title + '</a>'
-      				string += ' by <a id="oaattributionurl" xmlns:cc="http://creativecommons.org/ns#" href="' + attribution_url + '" property="cc:attributionName" rel="cc:attributionURL" oaauthor="' + author + '">' + author + '</a>';
-      				string += ' is licensed under a <a id="oalicense" rel="license" href="' + license_url + '">' + license_shorthand + '</a>.<br />';
-      				string += ' Based on a work at <a xmlns:dct="http://purl.org/dc/terms/" href="<? echo $_GET['post']; ?>" rel="dct:source"><?php echo $_GET['post']; ?></a>.';
-      				      	    				
-      				alert(string);      				
-      				      				
-      				var win = window.dialogArguments || opener || parent || top;
+      					string = ' <a xmlns:dc="http://purl.org/dc/terms/" property="dc:title" id="oatitle" href="<?PHP echo $_GET['post']; ?>">' + title + '</a>'
+      					string += ' by <a id="oaattributionurl" xmlns:cc="http://creativecommons.org/ns#" href="' + attribution_url + '" property="cc:attributionName" rel="cc:attributionURL" oaauthor="' + author + '">' + author + '</a>';
+      					string += ' is licensed under a <a id="oalicense" rel="license" href="' + license_url + '">' + license_shorthand + '</a>.<br />';
+      					string += ' Based on a work at <a xmlns:dct="http://purl.org/dc/terms/" href="<?PHP echo $_GET['post']; ?>" rel="dct:source"><?PHP echo $_GET['post']; ?></a>.';
+      				
+      				}
+      				   				
       				win.send_to_editor(string);
       				      				
       				return true;
+      				
     			}
     			
     			function insert_author(){
@@ -89,15 +223,29 @@ function add_openattribute_action() {
 				
 			var win = window.dialogArguments || opener || parent || top;
 			
-			author = win.document.getElementById('content').innerHTML;
-		
-			author_data = author.split('oaattributionurl');
+			var data = win.document.getElementById('content_ifr');
+					
+			if(data==null){
 			
-			if(author_data.length!=1){
+				data = win.document.getElementById('content').value;
+				
+			}else{
+			
+				data = data.contentWindow.document.body.innerHTML;
+			
+			}
 		
-				author = author_data[1].split('&gt;');
+			author_data = data.split('oaattributionurl');
+			
+			if(author_data.length!=1){				
+				
+				author_data = author_data[1];
 		
-				author = author[1].split('&lt;');
+				author = author_data.split('>');
+		
+				author = author[1];
+		
+				author = author.split('<');
 				
 				author=author[0];
 			
@@ -111,22 +259,20 @@ function add_openattribute_action() {
 			
 				document.write('<p>If you wish to change the details you can do so now <input id="author_oa" type="text" value="" size="90" /></p>');
 			
-			}			
+			}
 			
-		</script>
-		<script type="text/javascript">
 		
-			var win = window.dialogArguments || opener || parent || top;
-		
-			data_to_parse = win.document.getElementById('content').innerHTML;
-		
-			title_data = data_to_parse.split('oatitle');
+			title_data = data.split('oatitle');
 			
 			if(title_data.length!=1){
 		
-				title = title_data[1].split('&gt;');
+				title = title_data[1];
 				
-				title = title[1].split('&lt;');
+				title = title.split('>');
+				
+				title = title[1];
+				
+				title = title.split('<');
 			
 				if(title.length!=1){
 		
@@ -148,16 +294,9 @@ function add_openattribute_action() {
 			
 				document.write('<p>If you wish to give the work a title you can do so<input id="title_oa" type="text" value="" size="90" /></p>');
 			
-			}				
-			
-		</script>
-		<script type="text/javascript">
+			}
 		
-			var win = window.dialogArguments || opener || parent || top;
-		
-			data_to_parse = win.document.getElementById('content').innerHTML;
-		
-			attribution_url_data = data_to_parse.split('oaattributionurl');
+			attribution_url_data = data.split('oaattributionurl');
 		
 			if(attribution_url_data.length!=1){
 			
@@ -185,7 +324,7 @@ function add_openattribute_action() {
 			
 				document.write('<p>You can set a URL for yourself as an author (Wordpress address set by default)<input id="url_oa" type="text" value="<?PHP echo site_url(); ?>" size="90" /></p>');
 			
-			}			
+			}	
 			
 		</script>
 		<p>Now choose a license
@@ -206,32 +345,46 @@ function add_openattribute_action() {
 		</p>
 		<script type="text/javascript">
 	
-		var win = window.dialogArguments || opener || parent || top;
-		
-		data_to_parse = win.document.getElementById('content').innerHTML;		
-		
-		oashorthand_data = data_to_parse.split('oalicense');
-		
-		if(oashorthand_data.length!=1){
-		
-			oashorthand = oashorthand_data[1].split('&gt;');
+			var win = window.dialogArguments || opener || parent || top;
 			
-			oashorthand = oashorthand[1].split('&lt;');
-		
-			if(oashorthand.length!=1){
-		
-				oashorthand=oashorthand[0];
-		
-				if(oashorthand!=""){
+			var data = win.document.getElementById('content_ifr');
+					
+			if(data==null){
 			
-					document.write('<p>The current license is set as ' + oashorthand + '</p>');
+				data = win.document.getElementById('content').value;
 				
+			}else{
+			
+				data = data.contentWindow.document.body.innerHTML;
+			
+			}	
+			
+			oashorthand_data = data.split('oalicense');
+			
+			if(oashorthand_data.length!=1){
+			
+				oashorthand = oashorthand_data[1];
+				
+				oashorthand = oashorthand.split('>');
+				
+				oashorthand = oashorthand[1];
+				
+				oashorthand = oashorthand.split('<');
+			
+				if(oashorthand.length!=1){
+			
+					oashorthand=oashorthand[0];
+			
+					if(oashorthand!=""){
+				
+						document.write('<p>The current license is set as ' + oashorthand + '</p>');
+					
+					}
+					
 				}
 				
 			}
-			
-		}
-			
+		
 		</script>
 		<p><input type="button" class="button" onclick="insert()" value="Insert" /></p>
 	<?php
@@ -314,8 +467,8 @@ function openattribute_options_page() {
     		</p>    	
     	</div>
     	<br />
-    	<input type="checkbox" name="openattribute_buttonset" <?PHP echo $buttonset; ?> /> If this box is ticked, an Open Attribute "Attribute Me" button will appear on all attributed resources <br />
-    	<input type="checkbox" name="openattribute_linkset" <?PHP echo $linkset; ?> /> If this box is ticked, an Open Attribute "Attribute Me" link will appear on all attributed resources <br />
+    	<input type="checkbox" name="openattribute_buttonset" <?PHP echo $buttonset; ?> /> If this box is ticked, an Open Attribute "Attribute Me" button will appear on all attributed resources (pages and posts) <br />
+    	<input type="checkbox" name="openattribute_linkset" <?PHP echo $linkset; ?> /> If this box is ticked, an Open Attribute "Attribute Me" link will appear on all attributed resources (pages and posts) <br />
     </div>
     <div style="width:95%; padding:10px; border:1px solid black; margin-top:7px;"><b><u>Using the widget</u></b><br/>
     	<p>
@@ -325,7 +478,8 @@ function openattribute_options_page() {
     </div>
     <div style="width:95%; padding:10px; border:1px solid black; margin-top:7px;"><b><u>Where will the link / button appear?</u></b><br/>
     	<p>
-    		Your license can either appear directly at the end of your blog - or at the end of the blog's page (after comments). You can tick both boxes if you prefer.
+    		Your license can either appear directly at the end of your blog - or at the end of the blog's page (after comments). You can tick both boxes if you prefer. You can use this and insert attribution as text into a page or post's content.<br><br>
+    		<b>Using this option</b> is like setting a site license, and so will appear on all content.
     	</p>
     	<input type="checkbox" name="openattribute_append_content" <?PHP echo $append_content; ?> /> If this box is ticked, the attribution will appear after the blog's content<br />
     	<input type="checkbox" name="openattribute_append_footer" <?PHP echo $append_footer; ?> /> If this box is ticked, the attribution will appear in the blog's footer (both this, and the option aboive, can be ticked)<br />
@@ -335,12 +489,15 @@ function openattribute_options_page() {
     	<p>
     		This section allows you (if you wish) to style how the attribution will appear.
     	</p>
-    	<input type="textbox" name="openattribute_pre_license_html" value="<?PHP echo addslashes(get_option('openattribute_pre_license_html')) ?>" /><br />
-    	<input type="textbox" name="openattribute_post_license_html" value="<?PHP echo addslashes(get_option('openattribute_post_license_html')) ?>" /><br />
+    	<p>Before<br/>
+    	<textarea cols="100" name="openattribute_pre_license_html"><?PHP echo stripslashes(get_option('openattribute_pre_license_html')) ?></textarea><br />
+    	</p><p>After<br/>
+    	<textarea cols="100" name="openattribute_post_license_html"><?PHP echo get_option('openattribute_post_license_html') ?></textarea><br />
+   		</p>
     </div>
     <div style="width:95%; padding:10px; border:1px solid black; margin-top:7px;"><b><u>Add licensing info to the RSS feeds</u></b><br/>
     	<p>
-    		Your license can either appear directly at the end of your blog - or at the end of the blog's page (after comments). You can tick both boxes if you prefer.
+    		Ticking this box will add attribution information to the RSS / RDFa / RSS2 feeds
     	</p>
     	<input type="checkbox" name="openattribute_rss" <?PHP echo $rss_feed; ?> /> If this box is ticked, the license information will be added to the RSS and Atom feeds <br />
     </div>
@@ -713,13 +870,15 @@ function openattribute_add_license_content($output){
 						
 						}
 						
+							    		
+			
+						$license_data .= stripslashes(get_option('openattribute_pre_license_html'));
+			
 						if(get_option('openattribute_buttonset')==1){
 			    		
-			    			$output .= '<div onclick="attribute_button(event)" style="float:left; position:relative; display:inline; cursor:pointer;cursor:hand"><img src="' . WP_PLUGIN_URL . '/' . '/openattribute_posts/' . 'attrib_button.png" /></DIV>';
+			    			$license_data .= '<div onclick="attribute_button(event)" style="float:left; position:relative; display:inline; cursor:pointer;cursor:hand"><img src="' . WP_PLUGIN_URL . '/' . '/openattribute_posts/' . 'attrib_button.png" /></DIV>';
 			    		
-			    		}		    		
-			
-						$license_data .= get_option('openattribute_pre_license_html');
+			    		}	
 			
 						$license_data .= '<span xmlns:dct="http://purl.org/dc/terms/" property="dct:title"><a href="' . $post->guid . '">' . the_title( '', '', 0 ) . '</a> / <a href="' . home_url() . '">' . get_bloginfo( "name" ) . '</a></span>';
 		      			$license_data .= ' by <a xmlns:cc="http://creativecommons.org/ns#" href="' . $site_attribution_url . '" property="cc:attributionName" rel="cc:attributionURL" >' . $author . '</a>';
@@ -738,7 +897,7 @@ function openattribute_add_license_content($output){
 	
 	}
 	
-	return get_option('openattribute_pre_license_html') . $output . get_option('openattribute_post_license_html');
+	return $output;
 
 }
 
@@ -808,13 +967,13 @@ function openattribute_add_license_footer($content){
 					
 					if(is_single()){
 					
+						$license_data .= stripslashes(get_option('openattribute_pre_license_html'));
+			
 						if(get_option('openattribute_buttonset')==1){
 			    		
-			    			$output = '<div onclick="attribute_button(event)" style="display:inline; cursor:pointer;cursor:hand"><img src="' . WP_PLUGIN_URL . '/' . '/openattribute_posts/' . 'attrib_button.png" /></DIV>';
+			    			$license_data .= '<div onclick="attribute_button(event)" style="float:left; position:relative; display:inline; cursor:pointer;cursor:hand"><img src="' . WP_PLUGIN_URL . '/' . '/openattribute_posts/' . 'attrib_button.png" /></DIV>';
 			    		
 			    		}
-			    		
-						$license_data .= get_option('openattribute_pre_license_html');
 			
 						$license_data .= '<span xmlns:dct="http://purl.org/dc/terms/" property="dct:title"><a href="' . $post->guid . '">' . the_title( '', '', 0 ) . '</a> / <a href="' . home_url() . '">' . get_bloginfo( "name" ) . '</a></span>';
 		      			$license_data .= ' by <a xmlns:cc="http://creativecommons.org/ns#" href="' . $site_attribution_url . '" property="cc:attributionName" rel="cc:attributionURL" >' . $author . '</a>';
@@ -888,11 +1047,11 @@ function openattribute_add_license_header(){
 							echo ' document.getElementById("openattribute_license_holder").style.display = "block";';
 			    			echo ' }</script>';							    		
 					
-							$license_data = '<div id="openattribute_license_holder" style="float:left; border:3px solid #1F3350; width:850px; padding:20px; display:none;"><div style="float:left; position:relative;"><img src="' . WP_PLUGIN_URL . '/' . str_replace(basename( __FILE__),"",plugin_basename(__FILE__)) . 'openAttrLogo.jpg" /><p style="margin:0px; padding:0px">HTML Text<br><textarea rows="5" cols="100" style="margin:0px; padding:0px;"><span xmlns:dct="http://purl.org/dc/terms/" property="dct:title"><a href="' . $post->guid . '">' . the_title( '', '', 0 ) . '</a> / <a href="' . home_url() . '">' . get_bloginfo( "name" ) . '</a></span>';
+							$license_data = '<div id="openattribute_license_holder" style="float:left; border:3px solid #1F3350; width:850px; padding:20px; display:none;"><div style="float:left; position:relative;"><img src="' . WP_PLUGIN_URL . '/' . str_replace(basename( __FILE__),"",plugin_basename(__FILE__)) . 'openAttrLogo.jpg" /><p style="margin:0px; padding:0px">HTML Text<br><textarea rows="5" cols="80" style="margin:0px; padding:0px;"><span xmlns:dct="http://purl.org/dc/terms/" property="dct:title"><a href="' . $post->guid . '">' . the_title( '', '', 0 ) . '</a> / <a href="' . home_url() . '">' . get_bloginfo( "name" ) . '</a></span>';
 				      		$license_data .= ' by <a xmlns:cc="http://creativecommons.org/ns#" href="' . $site_attribution_url . '" property="cc:attributionName" rel="cc:attributionURL" >' . $author . '</a>';
 				      		$license_data .= ' is licensed under a <a rel="license" href="' . $site_license_url . '">' . $site_license . '</a></textarea></p>';
 				      		
-				      		$license_data .= '<p style="margin:0px; padding:0px">Plain text<br /><textarea rows="5" cols="100" style="float:left; position:relative; clear:left; left:0px;">' . the_title( '', '', 0 ) . ' by ' . $author . ' @ ' . $site_attribution_url . ' is licensed under a <a rel="license" href="' . $site_license_url . '">' . $site_license . '</a></textarea></p><p style="text-decoration:underline;cursor:hand;cursor:pointer; margin:0px; padding:0px;" onclick="this.parentNode.parentNode.style.display=\'none\';">Close</p></div></div>';
+				      		$license_data .= '<p style="margin:0px; padding:0px">Plain text<br /><textarea rows="5" cols="80" style="float:left; position:relative; clear:left; left:0px;">' . the_title( '', '', 0 ) . ' by ' . $author . ' @ ' . $site_attribution_url . ' is licensed under a <a rel="license" href="' . $site_license_url . '">' . $site_license . '</a></textarea></p><p style="text-decoration:underline;cursor:hand;cursor:pointer; margin:0px; padding:0px;" onclick="this.parentNode.parentNode.style.display=\'none\';">Close</p></div></div>';
 				    		
 				    		echo $license_data;
 			    		
