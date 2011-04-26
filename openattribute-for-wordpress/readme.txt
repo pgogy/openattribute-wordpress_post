@@ -4,7 +4,7 @@ Donate link: http://openattribute.com/
 Tags: attribution
 Requires at least: 3.0.0
 Tested up to: 3.0
-Stable tag: 0.9
+Stable tag: 0.93
 
 Allows a user to add licensing and attribution information into a blog post / WordPress powered site.
 
@@ -23,6 +23,9 @@ e.g.
 3. Visit the settings page for the plugin - No other configuration is required.
 
 == Changelog ==
+
+= 0.93 =
+* Initial bug fixes released.
 
 = 0.9 =
 * This is the first version we have distributed - no changes have been made post this initial release as of yet.

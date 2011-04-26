@@ -3,7 +3,7 @@
 Plugin Name: Open Attribute
 Plugin URI: http://openattribute.com
 OpenAttribute allows you to add licensing information to your Wordpress site and individual blogs. It places information into posts and RSS feeds as well as other user friendly features.
-Version: 0.91
+Version: 0.93
 Author: Open Attribute team
 Author URI: http://openattribute.com
 */
@@ -16,7 +16,7 @@ function openattribute_firstrun(){
 	    	
 	    echo "<p style=\"text-decoration:underline; font-weight:bold\">Information on OpenAttribute</p>";
 	    	
-	    echo "<p>Thanks for installing OpenAttribute. You can find out about how to use our <a href=\"http://http://openattribute.com/first-run-wordpress/\" target=\"_blank\">wordpress plugin</a> on our <a href=\"http://openattribute.com\">OpenAttribute</a> site, where we also have browser plugins.</p>";
+	    echo "<p>Thanks for installing OpenAttribute. You can find out about how to use our <a href=\"http://openattribute.com/first-run-wordpress/\" target=\"_blank\">wordpress plugin</a> on our <a href=\"http://openattribute.com\">OpenAttribute</a> site, where we also have browser plugins.</p>";
 	    
 	    echo "<p>If you'd like to get started straight away - either go to <a href=\"options-general.php?page=openattribute\">OpenAttribute settings page</a> or start a new blog post and look for the symbol below.</p>";
 	    
@@ -25,6 +25,8 @@ function openattribute_firstrun(){
 	    echo "<p>You can turn this screen off on the <a href=\"options-general.php?page=openattribute\">OpenAttribute settings page</a></p>";
 	    
 	    echo "</div>";
+	    
+	    update_option('openattribute_firstrun', 0);
     
     }
 
@@ -199,9 +201,9 @@ function add_openattribute_action() {
     			}
     
     </script>
-    <link rel='stylesheet' id='colors-css'  href='<?PHP echo WP_PLUGIN_URL . '/openattribute_posts/'; ?>openattribute_iframe.css' type='text/css' media='all' />
+    <link rel='stylesheet' id='colors-css'  href='<?PHP echo WP_PLUGIN_URL . '/openattribute-for-wordpress/'; ?>openattribute_iframe.css' type='text/css' media='all' />
 	<div id="openattribute">		
-		<img src="<?PHP echo WP_PLUGIN_URL . '/openattribute_posts/'; ?>openAttrLogo.jpg" />
+		<img src="<?PHP echo WP_PLUGIN_URL . '/openattribute-for-wordpress/'; ?>openAttrLogo.jpg" />
     	<h3>Adding licensing to your blog post</h3>
     	<p>Choose the author for this blog 
     <?php 
@@ -403,7 +405,7 @@ function openattribute_button($context) {
 
 function openattribute_register() {
 
-	add_option('openattribute_licenses', "http://creativecommons.org/licenses/by-nd/3.0,Attribution-NoDerivatives CC BY-ND\nhttp://creativecommons.org/licenses/by-nc-sa/3.0,Attribution-NonCommercial-ShareAlike CC BY-NC-SA\nhttp://creativecommons.org/licenses/by-sa/3.0,Attribution-ShareAlike CC BY-SA\nhttp://creativecommons.org/licenses/by-nc/3.0,Attribution-NonCommercial CC BY-NC\nhttp://creativecommons.org/licenses/by-nc-nd/3.0,Attribution-NonCommercial-NoDerivatives CC BY-NC-ND\n");
+	add_option('openattribute_licenses', "http://creativecommons.org/licenses/by-nd/3.0,Creative Commons Attribution-NoDerivatives CC BY-ND\nhttp://creativecommons.org/licenses/by-nc-sa/3.0,Creative Commons Attribution-NonCommercial-ShareAlike CC BY-NC-SA\nhttp://creativecommons.org/licenses/by-sa/3.0,Creative Commons Attribution-ShareAlike CC BY-SA\nhttp://creativecommons.org/licenses/by-nc/3.0,Creative Commons Attribution-NonCommercial CC BY-NC\nhttp://creativecommons.org/licenses/by-nc-nd/3.0,Creative Commons Attribution-NonCommercial-NoDerivatives CC BY-NC-ND\n");
 	add_option('openattribute_firstrun', 1);
 	add_option('openattribute_rss', 1);
 	add_option('openattribute_blogoverride', 1);
@@ -471,18 +473,17 @@ function openattribute_options_page() {
     	<input type="checkbox" name="openattribute_linkset" <?PHP echo $linkset; ?> /> If this box is ticked, an Open Attribute "Attribute Me" link will appear on all attributed resources (pages and posts) <br />
     </div>
     <div style="width:95%; padding:10px; border:1px solid black; margin-top:7px;"><b><u>Using the widget</u></b><br/>
-    	<p>
-    		The attribution can appear as a widget. You can use this and the blog options.
-    	</p>
-    	<input type="checkbox" name="openattribute_widgetset" <?PHP echo $widgetset; ?> /> If this box is ticked, the attribution will appear in the widget<br />
+    	 	<p>
+    	 		<input type="checkbox" name="openattribute_widgetset" <?PHP echo $widgetset; ?> /> Display attribution in the widget.
+    	 	</p>
     </div>
     <div style="width:95%; padding:10px; border:1px solid black; margin-top:7px;"><b><u>Where will the link / button appear?</u></b><br/>
     	<p>
     		Your license can either appear directly at the end of your blog - or at the end of the blog's page (after comments). You can tick both boxes if you prefer. You can use this and insert attribution as text into a page or post's content.<br><br>
     		<b>Using this option</b> is like setting a site license, and so will appear on all content.
     	</p>
-    	<input type="checkbox" name="openattribute_append_content" <?PHP echo $append_content; ?> /> If this box is ticked, the attribution will appear after the blog's content<br />
-    	<input type="checkbox" name="openattribute_append_footer" <?PHP echo $append_footer; ?> /> If this box is ticked, the attribution will appear in the blog's footer (both this, and the option aboive, can be ticked)<br />
+    	<input type="checkbox" name="openattribute_append_content" <?PHP echo $append_content; ?> /> Display the attribution after the blog's content (before comments)<br />
+    	<input type="checkbox" name="openattribute_append_footer" <?PHP echo $append_footer; ?> /> Display the attribution after comments on the blog <br />
     	<input type="checkbox" name="openattribute_rdfa" <?PHP echo $rdfa; ?> /> If this box is ticked, the attribution info will appear as a block of text as well (with RDFa)<br />
     </div>
     <div style="width:95%; padding:10px; border:1px solid black; margin-top:7px;"><b><u>HTML Options</u></b><br/>
@@ -876,7 +877,7 @@ function openattribute_add_license_content($output){
 			
 						if(get_option('openattribute_buttonset')==1){
 			    		
-			    			$license_data .= '<div onclick="attribute_button(event)" style="float:left; position:relative; display:inline; cursor:pointer;cursor:hand"><img src="' . WP_PLUGIN_URL . '/' . '/openattribute_posts/' . 'attrib_button.png" /></DIV>';
+			    			$license_data .= '<div onclick="attribute_button(event)" style="float:left; position:relative; display:inline; cursor:pointer;cursor:hand"><img src="' . WP_PLUGIN_URL . '/' . '/openattribute-for-wordpress/' . 'attrib_button.png" /></DIV>';
 			    		
 			    		}	
 			
@@ -971,7 +972,7 @@ function openattribute_add_license_footer($content){
 			
 						if(get_option('openattribute_buttonset')==1){
 			    		
-			    			$license_data .= '<div onclick="attribute_button(event)" style="float:left; position:relative; display:inline; cursor:pointer;cursor:hand"><img src="' . WP_PLUGIN_URL . '/' . '/openattribute_posts/' . 'attrib_button.png" /></DIV>';
+			    			$license_data .= '<div onclick="attribute_button(event)" style="float:left; position:relative; display:inline; cursor:pointer;cursor:hand"><img src="' . WP_PLUGIN_URL . '/' . '/openattribute-for-wordpress/' . 'attrib_button.png" /></DIV>';
 			    		
 			    		}
 			
@@ -1025,7 +1026,7 @@ function openattribute_add_license_header(){
 						
 						$data_licenses = explode("\n",$licenses);
 						
-						while($license = array_pop($data_licenses)){
+						while($license = array_shift($data_licenses)){
 						
 							$pair = explode(",",$license);
 							
@@ -1041,7 +1042,14 @@ function openattribute_add_license_header(){
 						
 							echo '<script type="text/javascript"> function attribute_button(event){ ';
 							echo ' document.getElementById("openattribute_license_holder").style.position = "absolute";';
-							echo ' document.getElementById("openattribute_license_holder").style.top = (document.documentElement.scrollTop+(event.clientY/2)) + "px";';
+							echo ' if(document.documentElement.scrollTop!=0){';
+							echo ' 		scroll_top = document.documentElement.scrollTop;';
+							echo ' }else{';
+							echo ' 		scroll_top = window.pageYOffset;';
+							echo ' }';
+							echo ' document.getElementById("openattribute_license_holder").style.top = (scroll_top+(event.clientY/2)) + "px";';
+							
+						
 							echo ' document.getElementById("openattribute_license_holder").style.left = ((document.documentElement.clientWidth/2)-350) + "px";';			    			
 							echo ' document.getElementById("openattribute_license_holder").style.zIndex = 2;';
 							echo ' document.getElementById("openattribute_license_holder").style.display = "block";';
@@ -1051,7 +1059,15 @@ function openattribute_add_license_header(){
 				      		$license_data .= ' by <a xmlns:cc="http://creativecommons.org/ns#" href="' . $site_attribution_url . '" property="cc:attributionName" rel="cc:attributionURL" >' . $author . '</a>';
 				      		$license_data .= ' is licensed under a <a rel="license" href="' . $site_license_url . '">' . $site_license . '</a></textarea></p>';
 				      		
-				      		$license_data .= '<p style="margin:0px; padding:0px">Plain text<br /><textarea rows="5" cols="80" style="float:left; position:relative; clear:left; left:0px;">' . the_title( '', '', 0 ) . ' by ' . $author . ' @ ' . $site_attribution_url . ' is licensed under a <a rel="license" href="' . $site_license_url . '">' . $site_license . '</a></textarea></p><p style="text-decoration:underline;cursor:hand;cursor:pointer; margin:0px; padding:0px;" onclick="this.parentNode.parentNode.style.display=\'none\';">Close</p></div></div>';
+				      		$license_data .= '<p style="margin:0px; padding:0px">Plain text<br /><textarea rows="5" cols="80" style="float:left; position:relative; clear:left; left:0px;">' . the_title( '', '', 0 ) . ' by ' . $author;
+				      		
+				      		if($site_attribution_url!=""){
+				      		
+				      			$license_data .= ' @ ' . $site_attribution_url;
+				      		
+				      		} 
+				      		
+				      		$license_data .= ' is licensed under a <a rel="license" href="' . $site_license_url . '">' . $site_license . '</a></textarea></p><p style="text-decoration:underline;cursor:hand;cursor:pointer; margin:0px; padding:0px;" onclick="this.parentNode.parentNode.style.display=\'none\';">Close</p></div></div>';
 				    		
 				    		echo $license_data;
 			    		
@@ -1231,7 +1247,7 @@ function openattribute_augment_feed($content) {
 	
 	function openattribute_stylesheet(){
 	
-		echo '<link rel="stylesheet" href="' . WP_PLUGIN_URL . '/openattribute_posts/' . 'openattribute_popup.css" type="text/css" media="screen,projection" /> ';	
+		echo '<link rel="stylesheet" href="' . WP_PLUGIN_URL . '/openattribute-for-wordpress/' . 'openattribute_popup.css" type="text/css" media="screen,projection" /> ';	
 	
 	}
 	
@@ -1275,6 +1291,15 @@ add_action('save_post', 'openattribute_save_post');
 
 add_action("the_content", 'openattribute_add_license_content');
 add_action('get_footer', 'openattribute_add_license_footer');
+
+//
+// The footer attribution may appear neater if you use wp_footer over get_footer
+//
+// comment out the get footer line above and remove the commenting from the line below to do this
+//
+//add_action('wp_footer', 'openattribute_add_license_footer');
+//
+
 add_action('loop_start', 'openattribute_add_license_header');
 
 // Load pop up for style sheet
