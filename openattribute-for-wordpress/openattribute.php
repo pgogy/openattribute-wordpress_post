@@ -186,8 +186,10 @@ function add_openattribute_action() {
       					string += ' Based on a work at <a xmlns:dct="http://purl.org/dc/terms/" href="<?PHP echo $_GET['post']; ?>" rel="dct:source"><?PHP echo $_GET['post']; ?></a>.';
       				
       				}
+      				
+      				
       				   				
-      				win.send_to_editor(string);
+      				win.send_to_editor('<?php echo get_option('openattribute_pre_license_html'); ?>' + string + '<?php echo get_option('openattribute_post_license_html'); ?>');
       				      				
       				return true;
       				
@@ -206,7 +208,11 @@ function add_openattribute_action() {
 		<img src="<?PHP echo WP_PLUGIN_URL . '/openattribute-for-wordpress/'; ?>openAttrLogo.jpg" />
     	<h3>Adding licensing to your blog post</h3>
     	<p>Choose the author for this blog 
-    <?php 
+    <?php
+    
+    	global $current_user;
+    
+    	wp_get_current_user();
     
     	$args = array(
 			'show_option_all'         => '',
@@ -215,6 +221,7 @@ function add_openattribute_action() {
 			'multi'                   => true,
 			'show'                    => 'display_name',
 			'name'                    => 'user',
+			'selected'				  => $current_user->ID,
 			'id'                      => 'user',
 			'class'                   => '', 
 			'blog_id'                 => $GLOBALS['blog_id']
@@ -259,7 +266,21 @@ function add_openattribute_action() {
 				
 			}else{
 			
-				document.write('<p>If you wish to change the details you can do so now <input id="author_oa" type="text" value="" size="90" /></p>');
+				<?PHP 
+				
+					if($current_user->user_firstname==""){
+					
+						$author = $current_user->user_nicename;
+					
+					}else{
+				
+						$author = $current_user->user_firstname . ' ' . $current_user->user_lastname;
+						
+					} 
+					
+				?>
+			
+				document.write('<p>If you wish to change the details you can do so now <input id="author_oa" type="text" value="<?PHP echo $author; ?>" size="90" /></p>');
 			
 			}
 			
@@ -287,6 +308,8 @@ function add_openattribute_action() {
 					}
 				
 				}else{
+				
+					
 			
 					document.write('<p>If you wish to give the work a title you can do so<input id="title_oa" type="text" value="" size="90" /></p>');
 			
@@ -294,7 +317,9 @@ function add_openattribute_action() {
 				
 			}else{
 			
-				document.write('<p>If you wish to give the work a title you can do so<input id="title_oa" type="text" value="" size="90" /></p>');
+				title = win.document.getElementById('title').value;
+			
+				document.write('<p>If you wish to give the work a title you can do so<input id="title_oa" type="text" value="' + title + '" size="90" /></p>');
 			
 			}
 		
@@ -484,7 +509,11 @@ function openattribute_options_page() {
     	</p>
     	<input type="checkbox" name="openattribute_append_content" <?PHP echo $append_content; ?> /> Display the attribution after the blog's content (before comments)<br />
     	<input type="checkbox" name="openattribute_append_footer" <?PHP echo $append_footer; ?> /> Display the attribution after comments on the blog <br />
-    	<input type="checkbox" name="openattribute_rdfa" <?PHP echo $rdfa; ?> /> If this box is ticked, the attribution info will appear as a block of text as well (with RDFa)<br />
+    	<div>
+    		<p style="font-weight:bold">Please note the following</p>
+    		<?PHP echo "<p><img src=\"" . WP_PLUGIN_URL . "/" . str_replace(basename( __FILE__),"",plugin_basename(__FILE__)) . "information.png\" /></p>";?>
+	    	<p>If you insert using this button then the license is added as text to the post / page content itself, and will therefore be displayed where you put it in the blog. The options above (after content / after comments) will not affect the location for this license.</p>
+    	</div>
     </div>
     <div style="width:95%; padding:10px; border:1px solid black; margin-top:7px;"><b><u>HTML Options</u></b><br/>
     	<p>
@@ -812,7 +841,7 @@ function openattribute_add_license_content($output){
 
 	global $wp_query;
 
-	if(is_single()){
+	//if(is_single()){
 
 		if(get_option('openattribute_append_content')==1){
 	
@@ -850,7 +879,7 @@ function openattribute_add_license_content($output){
 					
 				if($display){
 				
-					if(is_single()){	
+					//if(is_single()){	
 				
 						$author = get_option('openattribute_site_author');		
 						$site_license = get_option('openattribute_site_license');
@@ -877,7 +906,7 @@ function openattribute_add_license_content($output){
 			
 						if(get_option('openattribute_buttonset')==1){
 			    		
-			    			$license_data .= '<div onclick="attribute_button(event)" style="float:left; position:relative; display:inline; cursor:pointer;cursor:hand"><img src="' . WP_PLUGIN_URL . '/' . '/openattribute-for-wordpress/' . 'attrib_button.png" /></DIV>';
+			    			$license_data .= '<div onclick="attribute_button(event)" class="open_attribute_button"><img src="' . WP_PLUGIN_URL . '/' . '/openattribute-for-wordpress/' . 'attrib_button.png" /></DIV>';
 			    		
 			    		}	
 			
@@ -888,7 +917,7 @@ function openattribute_add_license_content($output){
 		    		
 		    			$output .= $license_data;
 		    			
-		    		}
+		    		//}
 		
 				}
 			
@@ -896,7 +925,7 @@ function openattribute_add_license_content($output){
 		
 		}
 	
-	}
+	//}
 	
 	return $output;
 
@@ -906,7 +935,7 @@ function openattribute_add_license_footer($content){
 
 	global $wp_query,$post;
 	
-	if(is_single()){
+	//if(is_single()){
 
 		if(get_option('openattribute_append_footer')==1){
 	
@@ -966,13 +995,13 @@ function openattribute_add_license_footer($content){
 					
 					}
 					
-					if(is_single()){
+					//if(is_single()){
 					
 						$license_data .= stripslashes(get_option('openattribute_pre_license_html'));
 			
 						if(get_option('openattribute_buttonset')==1){
 			    		
-			    			$license_data .= '<div onclick="attribute_button(event)" style="float:left; position:relative; display:inline; cursor:pointer;cursor:hand"><img src="' . WP_PLUGIN_URL . '/' . '/openattribute-for-wordpress/' . 'attrib_button.png" /></DIV>';
+			    			$license_data .= '<div onclick="attribute_button(event)" class="open_attribute_button"><img src="' . WP_PLUGIN_URL . '/' . '/openattribute-for-wordpress/' . 'attrib_button.png" /></DIV>';
 			    		
 			    		}
 			
@@ -985,7 +1014,7 @@ function openattribute_add_license_footer($content){
 		    			
 		    			echo $output;
 		    		
-		    		}
+		    		//}
 		
 				}
 			
@@ -993,7 +1022,7 @@ function openattribute_add_license_footer($content){
 		
 		}
 	
-	}
+	//}
 
 }
 
