@@ -3,7 +3,7 @@ Contributors: openattribute
 Tags: attribution, licensing, creative commons, openattribute, mozilla, drumbeat, copyright, recognition, post, pages
 Requires at least: 3.0.0
 Tested up to: 3.1
-Stable tag: 0.94
+Stable tag: 0.96
 
 Allows a user to add licensing and attribution information into a blog post / WordPress powered site. 
 
@@ -17,11 +17,17 @@ This section describes how to install the plugin and get it working.
 
 e.g.
 
-1. Upload `plugin-name.php` to the `/wp-content/plugins/` directory
+1. Upload the contents of the zip (including the folder - called 'openattribute-for-wordpress') to the `/wp-content/plugins/` directory
 2. Activate the plugin through the 'Plugins' menu in WordPress
 3. Visit the settings page for the plugin - No other configuration is required.
 
 == Changelog ==
+
+= 0.96 =
+* Neater admin panel, support for multisite authors
+
+= 0.95 =
+* Slight change to instructions on installation
 
 = 0.94 =
 * More initial bug fixes released.

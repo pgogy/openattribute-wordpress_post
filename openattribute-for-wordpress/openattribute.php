@@ -3,7 +3,7 @@
 Plugin Name: Open Attribute
 Plugin URI: http://openattribute.com
 OpenAttribute allows you to add licensing information to your Wordpress site and individual blogs. It places information into posts and RSS feeds as well as other user friendly features.
-Version: 0.95
+Version: 0.96
 Author: Open Attribute team
 Author URI: http://openattribute.com
 */
@@ -446,6 +446,7 @@ function openattribute_register() {
 	add_option('openattribute_append_footer', '1');
 	add_option('openattribute_pre_license_html', '<div>');
 	add_option('openattribute_post_license_html', '</div>');
+	add_option('openattribute_authoroverride','');
 	
 }
 
@@ -453,9 +454,9 @@ function openattribute_options_page() {
   ?>
   	<div class="wrap">
 	<h2>Open Attribute</h2>
-	<p>Open attribute is a Wordpress plugin designed to allow users to add reuse licenses into their wordpress sites and then provide features so that people using your blog can attribute you.</p>
-	<p>Built to allow users to be as flexible as possible with their licenses, Open Attribute allows you to attribute your entire blog with a license and to attribute each blog individually if required.</p>
-	<p>On this control panel options for licensing are therefore divided between <a href="#blog">per blog</a> and <a href="#site">per site</a> options. You can also <a href="#license">add</a> any licenses you would like to be able to use</p>
+	<p>OpenAttribute is a Wordpress plugin designed to allow users to add reuse licenses into their WordPress sites.</p>
+	<p>Built to allow users to be as flexible as possible with their licenses, OpenAttribute allows you to attribute your entire site or attribute each post / page individually if required.</p>
+	<p>On this control panel options for licensing are therefore divided between <a href="#blog">per page / post</a> and <a href="#site">per site</a> options. You can also <a href="#license">add</a> any licenses you would like to be able to use</p>
 	<p>This control panel also has <a href="#plugin">plugin settings</a> to control features such as RSS and attribution buttons</p>
 	<form method="post" action="<?PHP echo $_SERVER[REQUEST_URI]; ?>">
 	<input name="submitted" type="hidden" value="openattribute" /><?PHP    
@@ -496,15 +497,12 @@ function openattribute_options_page() {
     	<br />
     	<input type="checkbox" name="openattribute_buttonset" <?PHP echo $buttonset; ?> /> If this box is ticked, an Open Attribute "Attribute Me" button will appear on all attributed resources (pages and posts) <br />
     	<input type="checkbox" name="openattribute_linkset" <?PHP echo $linkset; ?> /> If this box is ticked, an Open Attribute "Attribute Me" link will appear on all attributed resources (pages and posts) <br />
-    </div>
-    <div style="width:95%; padding:10px; border:1px solid black; margin-top:7px;"><b><u>Using the widget</u></b><br/>
-    	 	<p>
-    	 		<input type="checkbox" name="openattribute_widgetset" <?PHP echo $widgetset; ?> /> Display attribution in the widget.
-    	 	</p>
+   		<input type="checkbox" name="openattribute_widgetset" <?PHP echo $widgetset; ?> /> Display attribution in the widget. In doing this the Widget can be made to appear anywhere your theme supports Widgets <br />
+    	</p>
     </div>
     <div style="width:95%; padding:10px; border:1px solid black; margin-top:7px;"><b><u>Where will the link / button appear?</u></b><br/>
     	<p>
-    		Your license can either appear directly at the end of your blog - or at the end of the blog's page (after comments). You can tick both boxes if you prefer. You can use this and insert attribution as text into a page or post's content.<br><br>
+    		Your license can either appear directly at the end of your post or page - or after comments. You can tick both boxes if you prefer. You can use this and insert attribution as text into a page or post's content.<br><br>
     		<b>Using this option</b> is like setting a site license, and so will appear on all content.
     	</p>
     	<input type="checkbox" name="openattribute_append_content" <?PHP echo $append_content; ?> /> Display the attribution after the blog's content (before comments)<br />
@@ -512,7 +510,7 @@ function openattribute_options_page() {
     	<div>
     		<p style="font-weight:bold">Please note the following</p>
     		<?PHP echo "<p><img src=\"" . WP_PLUGIN_URL . "/" . str_replace(basename( __FILE__),"",plugin_basename(__FILE__)) . "information.png\" /></p>";?>
-	    	<p>If you insert using this button then the license is added as text to the post / page content itself, and will therefore be displayed where you put it in the blog. The options above (after content / after comments) will not affect the location for this license.</p>
+	    	<p>If you insert using this button then the license is added as text to the post / page content itself, and will therefore be displayed where you put it in the page / post. The options above (after content / after comments) will not affect the location for this license.</p>
     	</div>
     </div>
     <div style="width:95%; padding:10px; border:1px solid black; margin-top:7px;"><b><u>HTML Options</u></b><br/>
@@ -533,10 +531,10 @@ function openattribute_options_page() {
     </div>
     <div style="width:95%; padding:10px; border:1px solid black; margin-top:7px;"><b><u>Administrative features</u></b><br/>
     	<p>
-    		You can allow an author to override a site license with a blog post specific license, or allow a user to opt out of licensing a specific blog post completely.
+    		You can allow an author to override a site license with a post / page specific license (inserted using the button shown above), or allow a user to opt out of licensing a specific post / page completely.
     	</p>
-    	<input type="checkbox" name="openattribute_blogoverride" <?PHP echo $blog_override; ?> /> If this box is ticked, if you add a license into the blog, then the site license will not be displayed <br />
- 		<input type="checkbox" name="openattribute_disable" <?PHP echo $disable; ?> /> If this box is ticked, a blog author can opt out of having their work attributed<br />
+    	<input type="checkbox" name="openattribute_blogoverride" <?PHP echo $blog_override; ?> /> If this box is ticked, if you add a license into the page / post, then the site license will not be displayed <br />
+ 		<input type="checkbox" name="openattribute_disable" <?PHP echo $disable; ?> /> If this box is ticked, a page / post author can opt out of having their work attributed<br />
     </div>
     <div style="width:95%; padding:10px; border:1px solid black; margin-top:7px;"><b><u>The first run page</u></b><br/>
     	<p>
@@ -622,8 +620,11 @@ function openattribute_options_page() {
 	<p>Do you wish to use a URL for this author (called an attribution url)<input value="<?PHP	
 		
 		echo get_option('openattribute_site_attribution_url');
+		
+		$author_override = get_option('openattribute_authoroverride')=='1'?"checked":"";
 	
 	?>" type="text" size="50" name="oa_url" /></p>
+	<input type="checkbox" name="openattribute_authoroverride" <?PHP echo $author_override; ?> /> If this box is ticked, the author of the page / post will be attributed.<br />
     <p class="submit">
     <input type="submit" class="button-primary" value="<?php _e('Save Changes') ?>" />
     <input type="reset" class="button-primary" value="Cancel" id="cancel" />
@@ -755,6 +756,16 @@ function openattribute_postform(){
 		
 		}
 		
+		if($_POST['openattribute_authoroverride']!=""){
+		
+			update_option('openattribute_authoroverride', 1);
+		
+		}else{
+		
+			update_option('openattribute_authoroverride', 0);
+		
+		}
+		
 		update_option('openattribute_site_license', $_POST['openattribute_license_for_site']);
 		update_option('openattribute_site_attribution_url', $_POST['oa_url']);		
 	
@@ -839,7 +850,7 @@ function openattribute_add_disable_menu($output){
 
 function openattribute_add_license_content($output){
 
-	global $wp_query;
+	global $wp_query, $post;
 
 	//if(is_single()){
 
@@ -885,6 +896,13 @@ function openattribute_add_license_content($output){
 						$site_license = get_option('openattribute_site_license');
 						$site_attribution_url = get_option('openattribute_site_attribution_url');
 						$licenses = get_option('openattribute_licenses');
+						
+						if(get_option('openattribute_authoroverride')==1){
+						
+							$author = get_the_author();
+							$site_attribution_url = get_the_author_link();
+						
+						}
 						
 						$data_licenses = explode("\n",$licenses);
 						
@@ -980,6 +998,13 @@ function openattribute_add_license_footer($content){
 					$site_license = get_option('openattribute_site_license');
 					$site_attribution_url = get_option('openattribute_site_attribution_url');
 					$licenses = get_option('openattribute_licenses');
+					
+					if(get_option('openattribute_authoroverride')==1){
+						
+						$author = get_the_author();
+						$site_attribution_url = get_the_author_link();
+						
+					}
 					
 					$data_licenses = explode("\n",$licenses);
 					
