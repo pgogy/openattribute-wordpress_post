@@ -15,7 +15,7 @@ class OpenAttributeWidget extends WP_Widget {
 
      function widget($args, $instance){
      
-     	if($instance['openattribute_link']){
+     	if(($instance['openattribute_link']) || $instance['openattribute_image']){
        
        		global $wp_query;
 	
@@ -59,11 +59,17 @@ class OpenAttributeWidget extends WP_Widget {
 							
 						if($display){				
 												
-							if(is_single()){
+							if($instance['openattribute_image']){
 					    		
-					    		echo "<a onclick=\"attribute_button(event)\" style=\"cursor:hand; cursor:pointer\"><img src=\"" . WP_PLUGIN_URL . "/" . str_replace(basename( __FILE__),'',plugin_basename(__FILE__)) . "attrib_button.png\" />Attribute this resource</a>";
-					    	
-					    	}
+									echo "<a onclick=\"attribute_button(event)\" style=\"cursor:hand; cursor:pointer\"><img src=\"" . WP_PLUGIN_URL . "/" . str_replace(basename( __FILE__),'',plugin_basename(__FILE__)) . "attrib_button.png\" /></a>";
+								
+							}
+								
+							if($instance['openattribute_link']){
+									
+									echo "<a onclick=\"attribute_button(event)\" style=\"cursor:hand; cursor:pointer\">Attribute this resource</a>";
+								
+							}
 					    	
 					   }
 					}
@@ -82,6 +88,8 @@ class OpenAttributeWidget extends WP_Widget {
         $instance = $old_instance;
 
         $instance['openattribute_link'] = strip_tags($new_instance['openattribute_link']);
+
+        $instance['openattribute_image'] = strip_tags($new_instance['openattribute_image']);
         
         return $instance;
         
@@ -89,7 +97,7 @@ class OpenAttributeWidget extends WP_Widget {
 
      function form($instance) {
        	
-       	?><label>Tick this box if you wish the "Attribute this resource" link to appear in this widget</label>
+       	?><p>Tick the respective box if you wish the following to appear in this widget:</p>
        	  <input type="checkbox" name="<?PHP echo $this->get_field_name('openattribute_link'); ?>"<?PHP
        	
        		if($instance['openattribute_link']==true){
@@ -101,7 +109,20 @@ class OpenAttributeWidget extends WP_Widget {
        			echo " />";
        		
        		}
-       	 
+       	 ?>
+       	 <label>"Attribute this resource"</label> <br />
+       	 <input type="checkbox" name="<?PHP echo $this->get_field_name('openattribute_image');?>" <?PHP
+			if($instance['openattribute_image']==true){
+       		
+       			echo " checked />";
+       		
+       		}else{
+       		
+       			echo " />";
+       		
+       		}
+       	 ?>
+       	 <label>OpenAttribute image</label> <?PHP
        	
      }
      
