@@ -3,7 +3,7 @@
 Plugin Name: Open Attribute
 Plugin URI: http://openattribute.com
 OpenAttribute allows you to add licensing information to your Wordpress site and individual blogs. It places information into posts and RSS feeds as well as other user friendly features.
-Version: 0.96
+Version: 0.99
 Author: Open Attribute team
 Author URI: http://openattribute.com
 */
@@ -1154,13 +1154,21 @@ function openattribute_add_license_header(){
 	
 	if(is_home()&&$indexposts){
 	
+		if(is_single()){
+		
+			$display_first = true;
+		
+		}else if($indexsingle){
+		
+			$display_first = true;
+		
+		}
+	
+	}else if(is_page()&&$postsonly){
+	
 		$display_first = true;
 	
-	}else if(is_home()&&$indexsingle&&is_single()){
-	
-		$display_first = true;
-	
-	}else if(!is_page()&&$postsonly){
+	}else if(is_single()){
 	
 		$display_first = true;
 	

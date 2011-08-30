@@ -2,8 +2,8 @@
 Contributors: openattribute, barlas
 Tags: attribution, licensing, creative commons, openattribute, mozilla, drumbeat, copyright, recognition, post, pages
 Requires at least: 3.0.0
-Tested up to: 3.1
-Stable tag: 0.98
+Tested up to: 3.2
+Stable tag: 0.99
 
 Allows a user to add licensing and attribution information into a blog post / WordPress powered site. 
 
@@ -22,6 +22,9 @@ e.g.
 3. Visit the settings page for the plugin - No other configuration is required.
 
 == Changelog ==
+
+= 0.99 =
+* Bug fix for attribution button
 
 = 0.98 =
 * New management features for when to display attribution and alternative button
