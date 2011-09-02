@@ -966,11 +966,11 @@ function openattribute_add_license_content($output){
 						
 					if(get_option('openattribute_authoroverride')==1){
 						
-						$author = get_the_author();
-						$site_attribution_url = get_the_author_link();
+						$author = get_the_author_meta("display_name");
+						$site_attribution_url = get_the_author_meta("user_url");
 						
 					}
-						
+							
 					$data_licenses = explode("\n",$licenses);
 						
 					while($license = array_shift($data_licenses)){
@@ -1092,8 +1092,8 @@ function openattribute_add_license_footer($content){
 					
 					if(get_option('openattribute_authoroverride')==1){
 						
-						$author = get_the_author();
-						$site_attribution_url = get_the_author_link();
+						$author = get_the_author_meta("display_name");
+						$site_attribution_url = get_the_author_meta("user_url");
 						
 					}
 					
