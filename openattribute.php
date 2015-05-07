@@ -3,7 +3,7 @@
 Plugin Name: Open Attribute
 Plugin URI: http://openattribute.com
 OpenAttribute allows you to add licensing information to your Wordpress site and individual blogs. It places information into posts and RSS feeds as well as other user friendly features.
-Version: 0.992
+Version: 0.996
 Author: OpenAttribute, pgogy
 Author URI: http://openattribute.com
 */
@@ -430,7 +430,7 @@ function openattribute_button($context) {
 
 function openattribute_register() {
 
-	add_option('openattribute_licenses', "http://creativecommons.org/licenses/by-nd/3.0,Creative Commons Attribution-NoDerivatives CC BY-ND\nhttp://creativecommons.org/licenses/by-nc-sa/3.0,Creative Commons Attribution-NonCommercial-ShareAlike CC BY-NC-SA\nhttp://creativecommons.org/licenses/by-sa/3.0,Creative Commons Attribution-ShareAlike CC BY-SA\nhttp://creativecommons.org/licenses/by-nc/3.0,Creative Commons Attribution-NonCommercial CC BY-NC\nhttp://creativecommons.org/licenses/by-nc-nd/3.0,Creative Commons Attribution-NonCommercial-NoDerivatives CC BY-NC-ND\n");
+	update_option('openattribute_licenses', "http://creativecommons.org/licenses/by/3.0,Creative Commons Attribution-NoDerivatives CC BY 3.0\nhttp://creativecommons.org/licenses/by-nd/3.0,Creative Commons Attribution-NoDerivatives CC BY-ND 3.0\nhttp://creativecommons.org/licenses/by-nc-sa/3.0,Creative Commons Attribution-NonCommercial-ShareAlike CC BY-NC-SA 3.0 \nhttp://creativecommons.org/licenses/by-sa/3.0,Creative Commons Attribution-ShareAlike CC BY-SA 3.0\nhttp://creativecommons.org/licenses/by-nc/3.0,Creative Commons Attribution-NonCommercial CC BY-NC 3.0\nhttp://creativecommons.org/licenses/by-nc-nd/3.0,Creative Commons Attribution-NonCommercial-NoDerivatives CC BY-NC-ND 3.0\nhttps://creativecommons.org/publicdomain/zero/1.0/,Creative Commons Public Domain Dedication\nhttp://creativecommons.org/licenses/by/4.0,Creative Commons Attribution-NoDerivatives CC BY 4.0\nhttp://creativecommons.org/licenses/by-nd/4.0,Creative Commons Attribution-NoDerivatives CC BY-ND 4.0\nhttp://creativecommons.org/licenses/by-nc-sa/4.0,Creative Commons Attribution-NonCommercial-ShareAlike CC BY-NC-SA 4.0 \nhttp://creativecommons.org/licenses/by-sa/4.0,Creative Commons Attribution-ShareAlike CC BY-SA 4.0\nhttp://creativecommons.org/licenses/by-nc/4.0,Creative Commons Attribution-NonCommercial CC BY-NC 4.0\nhttp://creativecommons.org/licenses/by-nc-nd/4.0,Creative Commons Attribution-NonCommercial-NoDerivatives CC BY-NC-ND 4.0\n");
 	add_option('openattribute_firstrun', 1);
 	add_option('openattribute_rss', 1);
 	add_option('openattribute_blogoverride', 1);
@@ -449,6 +449,7 @@ function openattribute_register() {
 	add_option('openattribute_authoroverride','');
 	add_option('openattribute_index',0);
 	add_option('openattribute_indexsingle',0);
+	add_option('openattribute_postsonly',0);
 	add_option('openattribute_postsonly',0);
 	
 }
@@ -477,6 +478,7 @@ function openattribute_options_page() {
 		$indexposts = get_option('openattribute_index')=='1'?"checked":"";
     	$indexsingle = get_option('openattribute_indexsingle')=='1'?"checked":"";
 		$postsonly = get_option('openattribute_postsonly')=='1'?"checked":"";
+		$altlink = get_option('openattribute_altlink');
     	
     ?><h3><a name="plugin">Attribution appearance settings</a></h3>
     <p>Here you can set settings for the plugin, these settings can be changed at anytime.</p>
@@ -502,6 +504,7 @@ function openattribute_options_page() {
     	</div>
     	<br />
     	<input type="checkbox" name="openattribute_buttonset" <?PHP echo $buttonset; ?> /> If this box is ticked, an Open Attribute "Attribute Me" button will appear on all attributed resources (pages and posts) <br />
+    	Replace the Open Attribute "Attribute Me" button with a different URL <input type="text" size="100" name="openattribute_altlink" value="<?PHP echo $altlink; ?>" /><br />
     	<input type="checkbox" name="openattribute_linkset" <?PHP echo $linkset; ?> /> If this box is ticked, an Open Attribute "Attribute Me" link will appear on all attributed resources (pages and posts) <br />
    		<input type="checkbox" name="openattribute_widgetset" <?PHP echo $widgetset; ?> /> Display attribution in the widget. In doing this the Widget can be made to appear anywhere your theme supports Widgets <br />
     	</p>
@@ -553,7 +556,7 @@ function openattribute_options_page() {
     </div>
     <h3><a name="licenses">Add Licenses</a></h3>
     <p>Please enter the licenses you wish to use below. The format for the license is "<b>URL</b><b>,</b><b>text to display on screen</b>". If you wish to use a custom license, perhaps create a page on your blog to hold your licensing info. By default you have been provided with some <a href="http://www.creativecommons.org" target="_blank">Creative Commons licenses</a>.</p>
-    <textarea rows="5" cols="100" name="openattribute_licenses" ><?php 
+    <textarea rows="5" cols="100" style="width:100%; height:200px;" name="openattribute_licenses" ><?php 
     
     														$string = get_option('openattribute_licenses');
     														
@@ -795,6 +798,16 @@ function openattribute_postform(){
 		
 		}
 		
+		if($_POST['openattribute_altlink']!=""){
+		
+			update_option('openattribute_altlink', $_POST['openattribute_altlink']);
+		
+		}else{
+		
+			update_option('openattribute_altlink', $_POST['openattribute_altlink']);
+		
+		}
+		
 		if($_POST['openattribute_postsonly']!=""){
 		
 			update_option('openattribute_postsonly', 1);
@@ -989,7 +1002,14 @@ function openattribute_add_license_content($output){
 			
 					if(get_option('openattribute_buttonset')==1){
 			    		
-			    		$license_data .= '<div onclick="attribute_button(event)" class="open_attribute_button"><img src="' . WP_PLUGIN_URL . '/' . '/openattribute-for-wordpress/' . 'attrib_button.png" /></DIV>';
+			    		$license_data .= '<div onclick="attribute_button(event)" class="open_attribute_button">';
+						
+						if(get_option("openattribute_altlink")!=""){
+							$license_data .=  '<img src="' . get_option("openattribute_altlink"). '" />';
+						}else{
+							$license_data .=  '<img src="' . WP_PLUGIN_URL . '/openattribute-for-wordpress/attrib_button.png" />';
+						}
+						$license_data .=  '</DIV>';
 			    		
 			    	}	
 			
@@ -1117,7 +1137,14 @@ function openattribute_add_license_footer($content){
 			
 						if(get_option('openattribute_buttonset')==1){
 			    		
-			    			$license_data .= '<div onclick="attribute_button(event)" class="open_attribute_button"><img src="' . WP_PLUGIN_URL . '/' . '/openattribute-for-wordpress/' . 'attrib_button.png" /></DIV>';
+			    			$license_data .= '<div onclick="attribute_button(event)" class="open_attribute_button">';
+							
+							if(get_option("openattribute_altlink")!=""){
+								$license_data .=  '<img src="' . get_option("openattribute_altlink"). '" />';
+							}else{
+								$license_data .=  '<img src="' . WP_PLUGIN_URL . '/openattribute-for-wordpress/attrib_button.png" />';
+							}
+							$license_data .=  '</DIV>';
 			    		
 			    		}
 			
