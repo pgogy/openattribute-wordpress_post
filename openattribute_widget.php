@@ -14,19 +14,19 @@ class OpenAttributeWidget extends WP_Widget {
      }
 
      function widget($args, $instance){
-     
+	 
      	if(($instance['openattribute_link']) || $instance['openattribute_image']){
-       
+	   
        		global $wp_query;
 	
 			if(is_single()){
-
+	
 				if(get_option('openattribute_widgetset')==1){
 		
 					$disable = get_post_meta($wp_query->posts[0]->ID, 'disable_license');
 				
 					if($disable[0]=="off"||$disable[0]==""){
-					
+	
 						$display = true;
 				
 						if(get_option('openattribute_blogoverride')==1){
@@ -57,7 +57,12 @@ class OpenAttributeWidget extends WP_Widget {
 							
 						}
 							
-						if($display){				
+						if($display){	
+
+							echo $args['before_widget'];
+							echo $args['before_title'];
+							echo "Attribute me";
+							echo $args['after_title'];
 												
 							if($instance['openattribute_image']){
 					    		
@@ -70,6 +75,8 @@ class OpenAttributeWidget extends WP_Widget {
 									echo "<a onclick=\"attribute_button(event)\" style=\"cursor:hand; cursor:pointer\">Attribute this resource</a>";
 								
 							}
+							
+							echo $args['after_widget'];
 					    	
 					   }
 					}
