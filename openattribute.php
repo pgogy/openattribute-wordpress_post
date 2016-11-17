@@ -205,7 +205,7 @@ function add_openattribute_action() {
     </script>
     <link rel='stylesheet' id='colors-css'  href='<?PHP echo WP_PLUGIN_URL . '/openattribute-for-wordpress/'; ?>openattribute_iframe.css' type='text/css' media='all' />
 	<div id="openattribute">		
-		<img src="<?PHP echo WP_PLUGIN_URL . '/openattribute-for-wordpress/'; ?>openAttrLogo.jpg" />
+		<img src="<?PHP echo plugins_url( 'openAttrLogo.jpg', __FILE__ ) ?>" />
     	<h3>Adding licensing to your blog post</h3>
     	<p>Choose the author for this blog 
     <?php
@@ -1267,7 +1267,7 @@ function openattribute_add_license_header(){
 							
 							}
 					
-							$license_data = '<div id="openattribute_license_holder" style="float:left; border:3px solid #1F3350; width:850px; padding:20px; display:none;"><div style="float:left; position:relative;"><img src="' . WP_PLUGIN_URL . '/' . str_replace(basename( __FILE__),"",plugin_basename(__FILE__)) . 'openAttrLogo.jpg" /><p style="margin:0px; padding:0px">HTML Text<br><textarea rows="5" cols="80" style="margin:0px; padding:0px;"><span xmlns:dct="http://purl.org/dc/terms/" property="dct:title"><a href="' . $post->guid . '">' . the_title( '', '', 0 ) . '</a> / <a href="' . home_url() . '">' . get_bloginfo( "name" ) . '</a></span>';
+							$license_data = '<div id="openattribute_license_holder" style="float:left; border:3px solid #1F3350; width:850px; padding:20px; display:none;"><div style="float:left; position:relative;"><img src="' .  plugins_url( 'openAttrLogo.jpg', __FILE__ ) . '" /><p style="margin:0px; padding:0px">HTML Text<br><textarea rows="5" cols="80" style="margin:0px; padding:0px;"><span xmlns:dct="http://purl.org/dc/terms/" property="dct:title"><a href="' . $post->guid . '">' . the_title( '', '', 0 ) . '</a> / <a href="' . home_url() . '">' . get_bloginfo( "name" ) . '</a></span>';
 				      		$license_data .= ' by <a xmlns:cc="http://creativecommons.org/ns#" href="' . $site_attribution_url . '" property="cc:attributionName" rel="cc:attributionURL" >' . $author . '</a>';
 				      		$license_data .= ' is licensed under a <a rel="license" href="' . $site_license_url . '">' . $site_license . '</a></textarea></p>';
 				      		
@@ -1458,8 +1458,9 @@ function openattribute_augment_feed($content) {
 	}
 	
 	function openattribute_stylesheet(){
-	
-		echo '<link rel="stylesheet" href="' . WP_PLUGIN_URL . '/openattribute-for-wordpress/' . 'openattribute_popup.css" type="text/css" media="screen,projection" /> ';	
+		
+		$url_for_stylesheet = plugins_url( 'openattribute_popup.css', __FILE__ );	
+		echo '<link rel="stylesheet" href="' . $url_for_stylesheet . '" type="text/css" media="screen,projection" /> ';	
 	
 	}
 	
