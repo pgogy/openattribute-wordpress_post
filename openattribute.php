@@ -1464,9 +1464,7 @@ function openattribute_augment_feed($content) {
 	}
 
 	function openattribute_widget(){
-
-		register_widget('OpenAttributeWidget');
-
+		register_widget('Open_Attribute_Widget');
 	}
 
 // Modifications to feeds
