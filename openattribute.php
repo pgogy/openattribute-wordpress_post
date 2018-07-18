@@ -203,9 +203,9 @@ function add_openattribute_action() {
 				}
 
 	</script>
-	<link rel='stylesheet' id='colors-css'  href='<?PHP echo WP_PLUGIN_URL . '/openattribute-for-wordpress/'; ?>openattribute_iframe.css' type='text/css' media='all' />
+	<link rel='stylesheet' id='colors-css'  href='<?php echo WP_PLUGIN_URL . '/openattribute/'; ?>openattribute_iframe.css' type='text/css' media='all' />
 	<div id="openattribute">
-		<img src="<?PHP echo WP_PLUGIN_URL . '/openattribute-for-wordpress/'; ?>openAttrLogo.jpg" />
+		<img src="<?PHP echo WP_PLUGIN_URL . '/openattribute/'; ?>openAttrLogo.jpg" />
 		<h3>Adding licensing to your blog post</h3>
 		<p>Choose the author for this blog
 	<?php
@@ -1003,7 +1003,7 @@ function openattribute_add_license_content( $output ) {
 						if ( get_option( 'openattribute_altlink' ) != '' ) {
 							$license_data .= '<img src="' . get_option( 'openattribute_altlink' ) . '" />';
 						} else {
-							$license_data .= '<img src="' . WP_PLUGIN_URL . '/openattribute-for-wordpress/attrib_button.png" />';
+							$license_data .= '<img src="' . WP_PLUGIN_URL . '/openattribute/attrib_button.png" />';
 						}
 						$license_data .= '</DIV>';
 
@@ -1132,7 +1132,7 @@ function openattribute_add_license_footer( $content ) {
 							if ( get_option( 'openattribute_altlink' ) != '' ) {
 								$license_data .= '<img src="' . get_option( 'openattribute_altlink' ) . '" />';
 							} else {
-								$license_data .= '<img src="' . WP_PLUGIN_URL . '/openattribute-for-wordpress/attrib_button.png" />';
+								$license_data .= '<img src="' . WP_PLUGIN_URL . '/openattribute/attrib_button.png" />';
 							}
 							$license_data .= '</DIV>';
 
@@ -1431,7 +1431,7 @@ function openattribute_augment_feed( $content ) {
 
 function openattribute_stylesheet() {
 
-	echo '<link rel="stylesheet" href="' . WP_PLUGIN_URL . '/openattribute-for-wordpress/' . 'openattribute_popup.css" type="text/css" media="screen,projection" /> ';
+	echo '<link rel="stylesheet" href="' . WP_PLUGIN_URL . '/openattribute/' . 'openattribute_popup.css" type="text/css" media="screen,projection" /> ';
 
 }
 
