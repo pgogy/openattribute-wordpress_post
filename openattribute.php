@@ -612,7 +612,7 @@ function openattribute_options_page() {
 
 			}
 			?>
-	</select><p>The current license is - 
+	</select><p>The current license is -
 	<?PHP
 
 		echo get_option( 'openattribute_site_license' );
@@ -901,21 +901,15 @@ function openattribute_disable_menu() {
 }
 
 function openattribute_add_disable_menu( $output ) {
-
 	if ( get_option( 'openattribute_disable' ) == 1 ) {
-
 		add_meta_box( 'openattribute_id', 'OpenAttribute', 'openattribute_disable_menu', 'post', 'normal', 'high' );
-
 	}
 
-		$meta = get_post_meta( $_GET['post'], 'disable_license' );
+    $disable_license = get_post_meta( $_GET['post'], 'disable_license', true );
 
-	if ( $meta[0] == 'on' ) {
-
+	if ( 'on' === $disable_license ) {
 		add_meta_box( 'openattribute_id', 'OpenAttribute', 'openattribute_disable_menu', 'post', 'normal', 'high' );
-
 	}
-
 }
 
 function openattribute_add_license_content( $output ) {
