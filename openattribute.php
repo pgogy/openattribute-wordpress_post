@@ -877,27 +877,19 @@ function openattribute_save_post( $post_id ) {
 }
 
 function openattribute_disable_menu() {
+	wp_nonce_field( plugin_basename( __FILE__ ), 'openattribute_noncename' );
 
-		wp_nonce_field( plugin_basename( __FILE__ ), 'openattribute_noncename' );
+	$disable_license = get_post_meta( $_GET['post'], 'disable_license', true );
 
-		$meta = get_post_meta( $_GET['post'], 'disable_license' );
-
-	if ( $meta[0] == 'on' ) {
-
+	if ( 'on' === $disable_license ) {
 		$checked = 'checked';
-
 	} else {
-
 		$checked = '';
-
 	}
 
-	if ( ( get_option( 'openattribute_disable' ) == 1 ) || ( $meta[0] == 'on' ) ) {
-
+	if ( ( 1 == get_option( 'openattribute_disable' ) ) || ( 'on' === $disable_license ) ) {
 		echo "To disable attribution for this post please tick this box <input type=\"checkbox\" name=\"disable_license\" $checked />";
-
 	}
-
 }
 
 function openattribute_add_disable_menu( $output ) {
@@ -905,7 +897,7 @@ function openattribute_add_disable_menu( $output ) {
 		add_meta_box( 'openattribute_id', 'OpenAttribute', 'openattribute_disable_menu', 'post', 'normal', 'high' );
 	}
 
-    $disable_license = get_post_meta( $_GET['post'], 'disable_license', true );
+	$disable_license = get_post_meta( $_GET['post'], 'disable_license', true );
 
 	if ( 'on' === $disable_license ) {
 		add_meta_box( 'openattribute_id', 'OpenAttribute', 'openattribute_disable_menu', 'post', 'normal', 'high' );
