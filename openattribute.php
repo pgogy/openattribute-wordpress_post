@@ -852,7 +852,6 @@ function openattribute_add_license_footer( $content ) {
 						$output .= $license_data;
 
 						echo $output;
-
 					}
 				}
 			}
@@ -884,11 +883,11 @@ function openattribute_add_license_header() {
 
 	if ( $display_first ) {
 		if ( ( get_option( 'openattribute_append_footer' ) == 1 ) || ( get_option( 'openattribute_append_content' ) == 1 ) || ( get_option( 'openattribute_widgetset' ) == 1 ) ) {
-			if ( $disable[0] == '' ) {
+			if ( '' == $disable[0] ) {
 				$disable = get_post_meta( $_GET['page_id'], 'disable_license' );
 			}
 
-			if ( $disable[0] == 'off' || $disable[0] == '' ) {
+			if ( 'off' == $disable[0] || '' == $disable[0] ) {
 				$display = true;
 
 				if ( $display ) {
@@ -900,6 +899,7 @@ function openattribute_add_license_header() {
 
 						$data_licenses = explode( "\n", $licenses );
 
+                        // phpcs:disable
 						while ( $license = array_shift( $data_licenses ) ) {
 							$pair = explode( ',', $license );
 
@@ -907,6 +907,7 @@ function openattribute_add_license_header() {
 								$site_license_url = $pair[0];
 							}
 						}
+                        // phpcs:enable
 
 						if ( $display_first ) {
 							echo '<script type="text/javascript"> function attribute_button(event){ ';
@@ -937,13 +938,13 @@ function openattribute_add_license_header() {
 
 							$license_data .= '<p style="margin:0px; padding:0px">Plain text<br /><textarea rows="5" cols="80" style="float:left; position:relative; clear:left; left:0px;">' . the_title( '', '', 0 ) . ' by ' . $author;
 
-							if ( $site_attribution_url != '' ) {
+							if ( '' !== $site_attribution_url ) {
 								$license_data .= ' @ ' . $site_attribution_url;
 							}
 
 							$license_data .= ' is licensed under a <a rel="license" href="' . $site_license_url . '">' . $site_license . '</a></textarea></p><p style="text-decoration:underline;cursor:hand;cursor:pointer; margin:0px; padding:0px;" onclick="this.parentNode.parentNode.style.display=\'none\';">Close</p></div></div>';
 
-							echo $license_data;
+							echo esc_html( $license_data );
 						}
 					}
 				}
@@ -960,7 +961,7 @@ function openattribute_rdf_ns() {
 
 function openattribute_rdf_head() {
 	if ( get_option( 'openattribute_site_license' ) != '' ) {
-		echo '<cc:license rdf:resource="' . get_option( 'openattribute_site_license' ) . '" />';
+		echo '<cc:license rdf:resource="' . esc_html( get_option( 'openattribute_site_license' ) ) . '" />';
 	}
 }
 
@@ -968,24 +969,24 @@ function openattribute_rss2_head() {
 	if ( get_option( 'openattribute_site_license' ) != '' ) {
 		echo '<cc:license ';
 
-		if ( $_GET['feed'] == 'rss' ) {
+		if ( 'rss' == $_GET['feed'] ) {
 			echo ' xmlns:cc="http://creativecommons.org/ns#" ';
 		}
 
-		echo '>' . get_option( 'openattribute_site_license' ) . '</cc:license>';
+		echo '>' . esc_html( get_option( 'openattribute_site_license' ) ) . '</cc:license>';
 		echo '<dc:rights ';
 
-		if ( $_GET['feed'] == 'rss' ) {
+		if ( 'rss' == $_GET['feed'] ) {
 			echo ' xmlns:dc="http://purl.org/dc/elements/1.1/" ';
 		}
 
-		echo ' >' . get_option( 'openattribute_site_license' ) . '</dc:rights>';
+		echo ' >' . esc_html( get_option( 'openattribute_site_license' ) ) . '</dc:rights>';
 	}
 }
 
 function openattribute_atom_head() {
 	if ( get_option( 'openattribute_site_license' ) != '' ) {
-		echo '<link rel="license" type="text/html" href="' . get_option( 'openattribute_site_license' ) . '" />';
+		echo '<link rel="license" type="text/html" href="' . esc_url( get_option( 'openattribute_site_license' ) ) . '" />';
 	}
 }
 
