@@ -3,7 +3,7 @@
 class Open_Attribute_Widget extends WP_Widget {
 
 	public function __construct() {
-		$this->WP_Widget(
+        parent::__construct(
 			'openattribute_widget',
 			'OpenAttribute Widget',
 			[
