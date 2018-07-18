@@ -864,16 +864,11 @@ function openattribute_save_post( $post_id ) {
 		}
 	}
 
-	if ( $_POST['disable_license'] == 'on' ) {
-
+	if ( isset( $_POST['disable_license'] ) && 'on' === $_POST['disable_license'] ) {
 		  update_post_meta( $post_id, 'disable_license', 'on' );
-
 	} else {
-
 		  update_post_meta( $post_id, 'disable_license', 'off' );
-
 	}
-
 }
 
 function openattribute_disable_menu() {
