@@ -777,7 +777,7 @@ function openattribute_menu_option() {
 
 function openattribute_save_post( $post_id ) {
 
-	if ( ! wp_verify_nonce( $_POST['openattribute_noncename'], plugin_basename( __FILE__ ) ) ) {
+	if ( isset( $_POST['openattribute_noncename'] ) && ! wp_verify_nonce( $_POST['openattribute_noncename'], plugin_basename( __FILE__ ) ) ) {
 		  return $post_id;
 	}
 
@@ -785,7 +785,7 @@ function openattribute_save_post( $post_id ) {
 		  return $post_id;
 	}
 
-	if ( 'page' == $_POST['post_type'] ) {
+	if ( isset( $_POST['post_type'] ) && 'page' == $_POST['post_type'] ) {
 		if ( ! current_user_can( 'edit_page', $post_id ) ) {
 			return $post_id;
 		}
@@ -803,9 +803,13 @@ function openattribute_save_post( $post_id ) {
 }
 
 function openattribute_disable_menu() {
+    $disable_license = null;
+
 	wp_nonce_field( plugin_basename( __FILE__ ), 'openattribute_noncename' );
 
-	$disable_license = get_post_meta( $_GET['post'], 'disable_license', true );
+    if ( isset( $_GET['post'] ) ) {
+        $disable_license = get_post_meta( $_GET['post'], 'disable_license', true );
+    }
 
 	if ( 'on' === $disable_license ) {
 		$checked = 'checked';
@@ -819,11 +823,15 @@ function openattribute_disable_menu() {
 }
 
 function openattribute_add_disable_menu( $output ) {
+    $disable_license = null;
+
 	if ( get_option( 'openattribute_disable' ) == 1 ) {
 		add_meta_box( 'openattribute_id', 'OpenAttribute', 'openattribute_disable_menu', 'post', 'normal', 'high' );
 	}
 
-	$disable_license = get_post_meta( $_GET['post'], 'disable_license', true );
+    if ( isset( $_GET['post'] ) ) {
+        $disable_license = get_post_meta( $_GET['post'], 'disable_license', true );
+    }
 
 	if ( 'on' === $disable_license ) {
 		add_meta_box( 'openattribute_id', 'OpenAttribute', 'openattribute_disable_menu', 'post', 'normal', 'high' );
