@@ -9,6 +9,7 @@ class Open_Attribute_Widget extends WP_Widget {
 			[
 				'classname'   => 'OpenAttribute Widget',
 				'description' => 'Display a a license for your blog post or entire site in a widget',
+                'customize_selective_refresh' => true,
 			],
 			''
 		);
