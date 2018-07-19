@@ -95,7 +95,7 @@ class Open_Attribute_Widget extends WP_Widget {
 		<p>Tick the respective box if you wish the following to appear in this widget:</p>
 		<input type="checkbox" name="<?php echo esc_attr( $this->get_field_name( 'openattribute_link' ) ); ?>"
 		<?php
-		if ( true === $instance['openattribute_link'] ) {
+		if ( isset( $instance['openattribute_link'] ) && 'on' === $instance['openattribute_link'] ) {
 			echo ' checked />';
 		} else {
 			echo ' />';
@@ -104,7 +104,7 @@ class Open_Attribute_Widget extends WP_Widget {
 		<label>"Attribute this resource"</label> <br />
 		<input type="checkbox" name="<?php echo esc_attr( $this->get_field_name( 'openattribute_image' ) ); ?>"
 		<?php
-		if ( true === $instance['openattribute_image'] ) {
+		if ( isset( $instance['openattribute_link'] ) && 'on' === $instance['openattribute_image'] ) {
 			echo ' checked />';
 		} else {
 			echo ' />';
