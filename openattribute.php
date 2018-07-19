@@ -466,7 +466,7 @@ function openattribute_options_page() {
 	<p>Built to allow users to be as flexible as possible with their licenses, OpenAttribute allows you to attribute your entire site or attribute each post / page individually if required.</p>
 	<p>On this control panel options for licensing are therefore divided between <a href="#blog">per page / post</a> and <a href="#site">per site</a> options. You can also <a href="#license">add</a> any licenses you would like to be able to use</p>
 	<p>This control panel also has <a href="#plugin">plugin settings</a> to control features such as RSS and attribution buttons</p>
-	<form method="post" action="<?PHP echo $_SERVER[ REQUEST_URI ]; ?>">
+	<form method="post" action="<?php echo $_SERVER[ 'REQUEST_URI' ]; ?>">
 	<input name="submitted" type="hidden" value="openattribute" />
 	<?PHP
 
