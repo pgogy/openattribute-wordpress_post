@@ -466,7 +466,7 @@ function openattribute_options_page() {
 	<p>Built to allow users to be as flexible as possible with their licenses, OpenAttribute allows you to attribute your entire site or attribute each post / page individually if required.</p>
 	<p>On this control panel options for licensing are therefore divided between <a href="#blog">per page / post</a> and <a href="#site">per site</a> options. You can also <a href="#license">add</a> any licenses you would like to be able to use</p>
 	<p>This control panel also has <a href="#plugin">plugin settings</a> to control features such as RSS and attribution buttons</p>
-	<form method="post" action="<?php echo $_SERVER[ 'REQUEST_URI' ]; ?>">
+	<form method="post" action="<?php echo $_SERVER['REQUEST_URI']; ?>">
 	<input name="submitted" type="hidden" value="openattribute" />
 	<?PHP
 
@@ -664,180 +664,111 @@ function openattribute_options_page() {
 }
 
 function openattribute_postform() {
-
 	if ( ( isset( $_POST['submitted'] ) ) && ( $_POST['submitted'] == 'openattribute' ) ) {
-
 		update_option( 'openattribute_licenses', $_POST['openattribute_licenses'] );
 
-		if ( $_POST['openattribute_firstrun'] == 'on' ) {
-
+		if ( isset( $_POST['openattribute_firstrun'] ) && 'on' === $_POST['openattribute_firstrun'] ) {
 			update_option( 'openattribute_firstrun', 1 );
-
 		} else {
-
 			update_option( 'openattribute_firstrun', 0 );
-
 		}
 
 		if ( $_POST['openattribute_rss'] == 'on' ) {
-
 			update_option( 'openattribute_rss', 1 );
-
 		} else {
-
 			update_option( 'openattribute_rss', 0 );
-
 		}
 
 		if ( $_POST['openattribute_blogoverride'] == 'on' ) {
-
 			update_option( 'openattribute_blogoverride', 1 );
-
 		} else {
-
 			update_option( 'openattribute_blogoverride', 0 );
-
 		}
 
 		if ( $_POST['openattribute_buttonset'] == 'on' ) {
-
 			update_option( 'openattribute_buttonset', 1 );
-
 		} else {
-
 			update_option( 'openattribute_buttonset', 0 );
-
 		}
 
 		if ( $_POST['openattribute_linkset'] == 'on' ) {
-
 			update_option( 'openattribute_linkset', 1 );
-
 		} else {
-
 			update_option( 'openattribute_linkset', 0 );
-
 		}
 
 		if ( $_POST['openattribute_widgetset'] == 'on' ) {
-
 			update_option( 'openattribute_widgetset', 1 );
-
 		} else {
-
 			update_option( 'openattribute_widgetset', 0 );
-
 		}
 
 		update_option( 'openattribute_pre_license_html', $_POST['openattribute_pre_license_html'] );
-
 		update_option( 'openattribute_post_license_html', $_POST['openattribute_post_license_html'] );
 
-		if ( $_POST['openattribute_rdfa'] == 'on' ) {
-
+		if ( isset( $_POST['openattribute_rdfa'] ) && 'on' === $_POST['openattribute_rdfa'] ) {
 			update_option( 'openattribute_rdfa', 1 );
-
 		} else {
-
 			update_option( 'openattribute_rdfa', 0 );
-
 		}
 
 		if ( $_POST['openattribute_disable'] == 'on' ) {
-
 			update_option( 'openattribute_disable', 1 );
-
 		} else {
-
 			update_option( 'openattribute_disable', 0 );
-
 		}
 
 		if ( $_POST['openattribute_append_content'] == 'on' ) {
-
 			update_option( 'openattribute_append_content', 1 );
-
 		} else {
-
 			update_option( 'openattribute_append_content', 0 );
-
 		}
 
 		if ( $_POST['openattribute_append_footer'] == 'on' ) {
-
 			update_option( 'openattribute_append_footer', 1 );
-
 		} else {
-
 			update_option( 'openattribute_append_footer', 0 );
-
 		}
 
 		if ( $_POST['oa_author'] != '' ) {
-
 			update_option( 'openattribute_site_author', $_POST['oa_author'] );
-
 		} else {
-
 			update_option( 'openattribute_site_author', get_the_author_meta( 'display_name', $_POST['user'] ) );
-
 		}
 
-		if ( $_POST['openattribute_authoroverride'] != '' ) {
-
+		if ( isset( $_POST['openattribute_authoroverride'] ) && '' !== $_POST['openattribute_authoroverride'] ) {
 			update_option( 'openattribute_authoroverride', 1 );
-
 		} else {
-
 			update_option( 'openattribute_authoroverride', 0 );
-
 		}
 
-		if ( $_POST['openattribute_index'] != '' ) {
-
+		if ( isset( $_POST['openattribute_index'] ) && '' !== $_POST['openattribute_index'] ) {
 			update_option( 'openattribute_index', 1 );
-
 		} else {
-
 			update_option( 'openattribute_index', 0 );
-
 		}
 
-		if ( $_POST['openattribute_indexsingle'] != '' ) {
-
+		if ( isset( $_POST['openattribute_indexsingle'] ) && '' !== $_POST['openattribute_indexsingle'] ) {
 			update_option( 'openattribute_indexsingle', 1 );
-
 		} else {
-
 			update_option( 'openattribute_indexsingle', 0 );
-
 		}
 
 		if ( $_POST['openattribute_altlink'] != '' ) {
-
 			update_option( 'openattribute_altlink', $_POST['openattribute_altlink'] );
-
 		} else {
-
 			update_option( 'openattribute_altlink', $_POST['openattribute_altlink'] );
-
 		}
 
-		if ( $_POST['openattribute_postsonly'] != '' ) {
-
+		if ( isset( $_POST['openattribute_postsonly'] ) && '' !== $_POST['openattribute_postsonly'] ) {
 			update_option( 'openattribute_postsonly', 1 );
-
 		} else {
-
 			update_option( 'openattribute_postsonly', 0 );
-
 		}
 
 		update_option( 'openattribute_site_license', $_POST['openattribute_license_for_site'] );
 		update_option( 'openattribute_site_attribution_url', $_POST['oa_url'] );
-
 	}
-
 }
 
 function openattribute_menu_option() {
@@ -907,7 +838,7 @@ function openattribute_add_license_content( $output ) {
 	$indexsingle = get_option( 'openattribute_indexsingle' );
 	$postsonly   = get_option( 'openattribute_postsonly' );
 
-    $site_license_url = '';
+	$site_license_url = '';
 
 	$display_first = false;
 
