@@ -1015,7 +1015,7 @@ function openattribute_add_license_footer( $content ) {
 
 					if ( $display_first ) {
 
-						$license_data .= stripslashes( get_option( 'openattribute_pre_license_html' ) );
+						$license_data = stripslashes( get_option( 'openattribute_pre_license_html' ) );
 
 						if ( get_option( 'openattribute_buttonset' ) == 1 ) {
 
@@ -1035,7 +1035,7 @@ function openattribute_add_license_footer( $content ) {
 						$license_data .= ' is licensed under a <a rel="license" href="' . $site_license_url . '">' . $site_license . '</a>';
 						$license_data .= get_option( 'openattribute_post_license_html' );
 
-						$output .= $license_data;
+						$output = $license_data;
 
 						echo $output;
 
