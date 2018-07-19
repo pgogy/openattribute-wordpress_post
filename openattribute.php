@@ -895,7 +895,7 @@ function openattribute_add_license_content( $output ) {
 					while ( $license = array_shift( $data_licenses ) ) {
 						$pair = explode( ',', $license );
 
-						if ( trim( $pair[1] ) == trim( $site_license ) ) {
+						if ( isset( $pair[1] ) && trim( $pair[1] ) == trim( $site_license ) ) {
 							$site_license_url = $pair[0];
 						}
 					}
@@ -1103,7 +1103,7 @@ function openattribute_add_license_header() {
 						while ( $license = array_shift( $data_licenses ) ) {
 							$pair = explode( ',', $license );
 
-							if ( trim( $pair[1] ) == trim( $site_license ) ) {
+							if ( isset( $pair[1] ) && trim( $pair[1] ) == trim( $site_license ) ) {
 								$site_license_url = $pair[0];
 							}
 						}
