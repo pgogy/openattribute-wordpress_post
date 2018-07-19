@@ -29,6 +29,9 @@ e.g.
 Change WP_Widget to call __construct() instead of old PHP 4 constructors
 Implement multiple isset() checks to ensure we don't access unidentified indexes
 Add support to the widget for the WordPress customiser
+Update code format to match some WordPress core conventions
+Change openattribute_widget.php to class-openattribute-widget.php
+Change plugin folder name to be openattribute instead of openattribute-for-wordpress, matching the main plugin file as per WordPress recommended naming conventions
 
 = 1 =
 Fixed licence listing bug. Thanks to Phil Barker
