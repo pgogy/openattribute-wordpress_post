@@ -2,7 +2,7 @@
 Contributors: OpenAttribute, pgogy, barlas
 Tags: attribution, licensing, creative commons, openattribute, mozilla, drumbeat, copyright, recognition, post, pages
 Requires at least: 3.0.0
-Tested up to: 4.3
+Tested up to: 4.9.7
 Stable tag: 1
 
 Allows a user to add licensing and attribution information into a blog post / WordPress powered site.
@@ -24,6 +24,11 @@ e.g.
 3. Visit the settings page for the plugin - No other configuration is required.
 
 == Changelog ==
+
+= 1.1.0 =
+Change WP_Widget to call __construct() instead of old PHP 4 constructors
+Implement multiple isset() checks to ensure we don't access unidentified indexes
+Add support to the widget for the WordPress customiser
 
 = 1 =
 Fixed licence listing bug. Thanks to Phil Barker
