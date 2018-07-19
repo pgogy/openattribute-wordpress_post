@@ -50,10 +50,10 @@ class Open_Attribute_Widget extends WP_Widget {
 						}
 
 						if ( $display ) {
-							echo esc_html( $args['before_widget'] );
-							echo esc_html( $args['before_title'] );
+							echo $args['before_widget'];
+							echo $args['before_title'];
 							echo 'Attribute me';
-							echo esc_html( $args['after_title'] );
+							echo $args['after_title'];
 
 							if ( $instance['openattribute_image'] ) {
 								echo '<a onclick="attribute_button(event)" style="cursor:hand; cursor:pointer"><img src="' . esc_url( WP_PLUGIN_URL . '/' . str_replace( basename( __FILE__ ), '', plugin_basename( __FILE__ ) ) . 'attrib_button.png' ) . '" /></a>';
@@ -63,7 +63,7 @@ class Open_Attribute_Widget extends WP_Widget {
 								echo '<a onclick="attribute_button(event)" style="cursor:hand; cursor:pointer">Attribute this resource</a>';
 							}
 
-							echo esc_html( $args['after_widget'] );
+							echo $args['after_widget'];
 						}
 					}
 				}
