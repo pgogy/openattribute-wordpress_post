@@ -3,7 +3,7 @@
 Plugin Name: Open Attribute
 Plugin URI: http://openattribute.com
 OpenAttribute allows you to add licensing information to your WordPress site and individual blogs. It places information into posts and RSS feeds as well as other user friendly features.
-Version: 1
+Version: 1.0.1
 Author: OpenAttribute, pgogy
 Author URI: http://openattribute.com
 */
@@ -565,7 +565,7 @@ function openattribute_options_page() {
 	<textarea rows="5" cols="100" style="width:100%; height:200px;" name="openattribute_licenses" >
 	<?php
 
-    $string = get_option( 'openattribute_licenses' );
+	$string = get_option( 'openattribute_licenses' );
 
 	if ( $string == '' ) {
 		echo "http://creativecommons.org/licenses/by-nd/3.0,Attribution-NoDerivatives CC BY-ND\n";
@@ -577,7 +577,7 @@ function openattribute_options_page() {
 		echo $string;
 	}
 	?>
-    </textarea>
+	</textarea>
 	<h3><a name="site">Setup a site license</a></h3>
 	<p>Choose a site license from this list - you can add new licenses in the box above</p>
 	<select name="openattribute_license_for_site" id="openattribute_license_for_site">
@@ -628,10 +628,15 @@ function openattribute_options_page() {
 		'blog_id'         => $GLOBALS['blog_id'],
 	);
 
-    wp_dropdown_users( $args );
+	wp_dropdown_users( $args );
 	?>
 	or enter a name <input type="text" size="50" name="oa_author" value="<?php echo trim( get_option( 'openattribute_site_author' ) ); ?>" /></p>
-	<p>Do you wish to use a URL for this author (called an attribution url)<input value="<?php echo get_option( 'openattribute_site_attribution_url' ); $author_override = get_option( 'openattribute_authoroverride' ) == '1' ? 'checked' : ''; ?>" type="text" size="50" name="oa_url" /></p>
+	<p>Do you wish to use a URL for this author (called an attribution url)<input value="
+	<?php
+	echo get_option( 'openattribute_site_attribution_url' );
+	$author_override = get_option( 'openattribute_authoroverride' ) == '1' ? 'checked' : '';
+	?>
+	" type="text" size="50" name="oa_url" /></p>
 	<input type="checkbox" name="openattribute_authoroverride" <?PHP echo $author_override; ?> /> If this box is ticked, the author of the page / post will be attributed.<br />
 	<p class="submit">
 	<input type="submit" class="button-primary" value="<?php _e( 'Save Changes' ); ?>" />
@@ -783,13 +788,13 @@ function openattribute_save_post( $post_id ) {
 }
 
 function openattribute_disable_menu() {
-    $disable_license = null;
+	$disable_license = null;
 
 	wp_nonce_field( plugin_basename( __FILE__ ), 'openattribute_noncename' );
 
-    if ( isset( $_GET['post'] ) ) {
-        $disable_license = get_post_meta( $_GET['post'], 'disable_license', true );
-    }
+	if ( isset( $_GET['post'] ) ) {
+		$disable_license = get_post_meta( $_GET['post'], 'disable_license', true );
+	}
 
 	if ( 'on' === $disable_license ) {
 		$checked = 'checked';
@@ -803,15 +808,15 @@ function openattribute_disable_menu() {
 }
 
 function openattribute_add_disable_menu( $output ) {
-    $disable_license = null;
+	$disable_license = null;
 
 	if ( get_option( 'openattribute_disable' ) == 1 ) {
 		add_meta_box( 'openattribute_id', 'OpenAttribute', 'openattribute_disable_menu', 'post', 'normal', 'high' );
 	}
 
-    if ( isset( $_GET['post'] ) ) {
-        $disable_license = get_post_meta( $_GET['post'], 'disable_license', true );
-    }
+	if ( isset( $_GET['post'] ) ) {
+		$disable_license = get_post_meta( $_GET['post'], 'disable_license', true );
+	}
 
 	if ( 'on' === $disable_license ) {
 		add_meta_box( 'openattribute_id', 'OpenAttribute', 'openattribute_disable_menu', 'post', 'normal', 'high' );

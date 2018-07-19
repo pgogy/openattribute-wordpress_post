@@ -3,13 +3,13 @@
 class Open_Attribute_Widget extends WP_Widget {
 
 	public function __construct() {
-        parent::__construct(
+		parent::__construct(
 			'openattribute_widget',
 			'OpenAttribute Widget',
 			[
-				'classname'   => 'OpenAttribute Widget',
-				'description' => 'Display a a license for your blog post or entire site in a widget',
-                'customize_selective_refresh' => true,
+				'classname'                   => 'OpenAttribute Widget',
+				'description'                 => 'Display a a license for your blog post or entire site in a widget',
+				'customize_selective_refresh' => true,
 			],
 			''
 		);
