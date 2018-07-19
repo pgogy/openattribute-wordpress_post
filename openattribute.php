@@ -565,24 +565,19 @@ function openattribute_options_page() {
 	<textarea rows="5" cols="100" style="width:100%; height:200px;" name="openattribute_licenses" >
 	<?php
 
-															$string = get_option( 'openattribute_licenses' );
+    $string = get_option( 'openattribute_licenses' );
 
 	if ( $string == '' ) {
-
 		echo "http://creativecommons.org/licenses/by-nd/3.0,Attribution-NoDerivatives CC BY-ND\n";
 		echo "http://creativecommons.org/licenses/by-nc-sa/3.0,Attribution-NonCommercial-ShareAlike CC BY-NC-SA\n";
 		echo "http://creativecommons.org/licenses/by-sa/3.0,Attribution-ShareAlike CC BY-SA\n";
 		echo "http://creativecommons.org/licenses/by-nc/3.0,Attribution-NonCommercial CC BY-NC\n";
 		echo "http://creativecommons.org/licenses/by-nc-nd/3.0,Attribution-NonCommercial-NoDerivatives CC BY-NC-ND\n";
-
 	} else {
-
 		echo $string;
-
 	}
-
 	?>
-													</textarea>
+    </textarea>
 	<h3><a name="site">Setup a site license</a></h3>
 	<p>Choose a site license from this list - you can add new licenses in the box above</p>
 	<select name="openattribute_license_for_site" id="openattribute_license_for_site">
@@ -619,7 +614,7 @@ function openattribute_options_page() {
 
 	?>
 	<p>Choose an author name to display for this site<br />
-	<?PHP
+	<?php
 
 	$args = array(
 		'show_option_all' => '',
@@ -633,25 +628,10 @@ function openattribute_options_page() {
 		'blog_id'         => $GLOBALS['blog_id'],
 	);
 
-														   wp_dropdown_users( $args );
-
+    wp_dropdown_users( $args );
 	?>
-	or enter a name <input type="text" size="50" name="oa_author" value="
-	<?PHP
-
-		echo get_option( 'openattribute_site_author' );
-
-	?>
-	" /></p>
-	<p>Do you wish to use a URL for this author (called an attribution url)<input value="
-	<?PHP
-
-		echo get_option( 'openattribute_site_attribution_url' );
-
-		$author_override = get_option( 'openattribute_authoroverride' ) == '1' ? 'checked' : '';
-
-	?>
-	" type="text" size="50" name="oa_url" /></p>
+	or enter a name <input type="text" size="50" name="oa_author" value="<?php echo trim( get_option( 'openattribute_site_author' ) ); ?>" /></p>
+	<p>Do you wish to use a URL for this author (called an attribution url)<input value="<?php echo get_option( 'openattribute_site_attribution_url' ); $author_override = get_option( 'openattribute_authoroverride' ) == '1' ? 'checked' : ''; ?>" type="text" size="50" name="oa_url" /></p>
 	<input type="checkbox" name="openattribute_authoroverride" <?PHP echo $author_override; ?> /> If this box is ticked, the author of the page / post will be attributed.<br />
 	<p class="submit">
 	<input type="submit" class="button-primary" value="<?php _e( 'Save Changes' ); ?>" />
@@ -1131,11 +1111,11 @@ function openattribute_add_license_header() {
 							echo ' document.getElementById("openattribute_license_holder").style.display = "block";';
 							echo ' }</script>';
 
-							if ( ! isset( $site_attribution_url ) ) {
+							if ( empty( $site_attribution_url ) ) {
 								$site_attribution_url = site_url();
 							}
 
-							if ( ! isset( $site_license_url ) ) {
+							if ( empty( $site_license_url ) ) {
 								$site_license_url = $site_license;
 							}
 
