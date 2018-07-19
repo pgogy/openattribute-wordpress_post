@@ -900,104 +900,78 @@ function openattribute_add_disable_menu( $output ) {
 }
 
 function openattribute_add_license_content( $output ) {
-
 	global $wp_query, $post;
-
 	global $wp_query,$post;
 
 	$indexposts  = get_option( 'openattribute_index' );
 	$indexsingle = get_option( 'openattribute_indexsingle' );
 	$postsonly   = get_option( 'openattribute_postsonly' );
 
+    $site_license_url = '';
+
 	$display_first = false;
 
 	if ( is_home() && $indexposts ) {
-
 		if ( is_single() ) {
-
 			$display_first = true;
-
 		} elseif ( $indexsingle ) {
-
 			$display_first = true;
-
 		}
 	} elseif ( is_page() && $postsonly ) {
-
 		$display_first = true;
-
 	} elseif ( is_single() ) {
-
 		$display_first = true;
-
 	}
 
 	if ( $display_first ) {
-
 		if ( get_option( 'openattribute_append_content' ) == 1 ) {
-
 			$disable = get_post_meta( $wp_query->posts[0]->ID, 'disable_license' );
 
 			if ( $disable[0] == 'off' || $disable[0] == '' ) {
-
 				$display = true;
 
 				if ( get_option( 'openattribute_blogoverride' ) == 1 ) {
-
 					$author      = explode( 'oaauthor', $output );
 					$title       = explode( 'oatitle', $output );
 					$oashorthand = explode( 'oalicense', $output );
 
 					if ( count( $author ) != 1 ) {
-
 						$display = false;
-
 					}
 
 					if ( count( $title ) != 1 ) {
-
 						$display = false;
-
 					}
 
 					if ( count( $oashorthand ) != 1 ) {
-
 						$display = false;
-
 					}
 				}
 
 				if ( $display_first ) {
-
 					$author               = get_option( 'openattribute_site_author' );
 					$site_license         = get_option( 'openattribute_site_license' );
 					$site_attribution_url = get_option( 'openattribute_site_attribution_url' );
 					$licenses             = get_option( 'openattribute_licenses' );
 
 					if ( get_option( 'openattribute_authoroverride' ) == 1 ) {
-
 						$author               = get_the_author_meta( 'display_name' );
 						$site_attribution_url = get_the_author_meta( 'user_url' );
-
 					}
 
 					$data_licenses = explode( "\n", $licenses );
 
 					while ( $license = array_shift( $data_licenses ) ) {
-
 						$pair = explode( ',', $license );
 
 						if ( trim( $pair[1] ) == trim( $site_license ) ) {
-
 							$site_license_url = $pair[0];
-
 						}
 					}
 
-					$license_data .= stripslashes( get_option( 'openattribute_pre_license_html' ) );
+					$license_data = stripslashes( get_option( 'openattribute_pre_license_html' ) );
 
 					if ( get_option( 'openattribute_buttonset' ) == 1 ) {
-
 						$license_data .= '<div onclick="attribute_button(event)" class="open_attribute_button">';
 
 						if ( get_option( 'openattribute_altlink' ) != '' ) {
@@ -1005,8 +979,8 @@ function openattribute_add_license_content( $output ) {
 						} else {
 							$license_data .= '<img src="' . WP_PLUGIN_URL . '/openattribute/attrib_button.png" />';
 						}
-						$license_data .= '</DIV>';
 
+						$license_data .= '</DIV>';
 					}
 
 					$license_data .= '<span xmlns:dct="http://purl.org/dc/terms/" property="dct:title"><a href="' . $post->guid . '">' . the_title( '', '', 0 ) . '</a> / <a href="' . home_url() . '">' . get_bloginfo( 'name' ) . '</a></span>';
@@ -1015,7 +989,6 @@ function openattribute_add_license_content( $output ) {
 					$license_data .= get_option( 'openattribute_post_license_html' );
 
 					$output .= $license_data;
-
 				}
 			}
 		}
