@@ -1156,8 +1156,9 @@ function openattribute_add_license_footer( $content ) {
 }
 
 function openattribute_add_license_header() {
-
 	global $post;
+
+	$disable = null;
 
 	$indexposts  = get_option( 'openattribute_index' );
 	$indexsingle = get_option( 'openattribute_indexsingle' );
@@ -1166,44 +1167,28 @@ function openattribute_add_license_header() {
 	$display_first = false;
 
 	if ( is_home() && $indexposts ) {
-
 		if ( is_single() ) {
-
 			$display_first = true;
-
 		} elseif ( $indexsingle ) {
-
 			$display_first = true;
-
 		}
 	} elseif ( is_page() && $postsonly ) {
-
 		$display_first = true;
-
 	} elseif ( is_single() ) {
-
 		$display_first = true;
-
 	}
 
 	if ( $display_first ) {
-
 		if ( ( get_option( 'openattribute_append_footer' ) == 1 ) || ( get_option( 'openattribute_append_content' ) == 1 ) || ( get_option( 'openattribute_widgetset' ) == 1 ) ) {
-
-			if ( $disable[0] == '' ) {
-
+			if ( isset( $_GET['page_id'] ) ) {
 				$disable = get_post_meta( $_GET['page_id'], 'disable_license' );
-
 			}
 
 			if ( $disable[0] == 'off' || $disable[0] == '' ) {
-
 				$display = true;
 
 				if ( $display ) {
-
 					if ( ( get_option( 'openattribute_buttonset' ) == 1 ) || ( get_option( 'openattribute_linkset' ) == 1 ) || ( get_option( 'openattribute_widgetset' ) == 1 ) ) {
-
 						$author               = get_option( 'openattribute_site_author' );
 						$site_license         = get_option( 'openattribute_site_license' );
 						$site_attribution_url = get_option( 'openattribute_site_attribution_url' );
@@ -1212,18 +1197,14 @@ function openattribute_add_license_header() {
 						$data_licenses = explode( "\n", $licenses );
 
 						while ( $license = array_shift( $data_licenses ) ) {
-
 							$pair = explode( ',', $license );
 
 							if ( trim( $pair[1] ) == trim( $site_license ) ) {
-
 								$site_license_url = $pair[0];
-
 							}
 						}
 
 						if ( $display_first ) {
-
 							echo '<script type="text/javascript"> function attribute_button(event){ ';
 							echo ' document.getElementById("openattribute_license_holder").style.position = "absolute";';
 							echo ' if(document.documentElement.scrollTop!=0){';
@@ -1239,15 +1220,11 @@ function openattribute_add_license_header() {
 							echo ' }</script>';
 
 							if ( ! isset( $site_attribution_url ) ) {
-
 								$site_attribution_url = site_url();
-
 							}
 
 							if ( ! isset( $site_license_url ) ) {
-
 								$site_license_url = $site_license;
-
 							}
 
 							$license_data  = '<div id="openattribute_license_holder" style="float:left; border:3px solid #1F3350; width:850px; padding:20px; display:none;"><div style="float:left; position:relative;"><img src="' . WP_PLUGIN_URL . '/' . str_replace( basename( __FILE__ ), '', plugin_basename( __FILE__ ) ) . 'openAttrLogo.jpg" /><p style="margin:0px; padding:0px">HTML Text<br><textarea rows="5" cols="80" style="margin:0px; padding:0px;"><span xmlns:dct="http://purl.org/dc/terms/" property="dct:title"><a href="' . $post->guid . '">' . the_title( '', '', 0 ) . '</a> / <a href="' . home_url() . '">' . get_bloginfo( 'name' ) . '</a></span>';
@@ -1257,22 +1234,18 @@ function openattribute_add_license_header() {
 							$license_data .= '<p style="margin:0px; padding:0px">Plain text<br /><textarea rows="5" cols="80" style="float:left; position:relative; clear:left; left:0px;">' . the_title( '', '', 0 ) . ' by ' . $author;
 
 							if ( $site_attribution_url != '' ) {
-
 								$license_data .= ' @ ' . $site_attribution_url;
-
 							}
 
 							$license_data .= ' is licensed under a <a rel="license" href="' . $site_license_url . '">' . $site_license . '</a></textarea></p><p style="text-decoration:underline;cursor:hand;cursor:pointer; margin:0px; padding:0px;" onclick="this.parentNode.parentNode.style.display=\'none\';">Close</p></div></div>';
 
 							echo $license_data;
-
 						}
 					}
 				}
 			}
 		}
 	}
-
 }
 
 function openattribute_rdf_ns() {
